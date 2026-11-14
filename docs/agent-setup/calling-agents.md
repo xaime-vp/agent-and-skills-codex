@@ -16,6 +16,8 @@ authorize GitHub writes, installation changes, merging or deployment.
 
 | Skill | Use it for | Example request |
 | --- | --- | --- |
+| [pr-completion](../../.agents/skills/pr-completion/SKILL.md) | Finish under this harness delivery rules | `Use $pr-completion to finish PR <URL>.` |
+| [skill-maintenance](../../.agents/skills/skill-maintenance/SKILL.md) | Maintain this harness without changing its role | `Use $skill-maintenance to adapt this skill for the current client.` |
 | [pr-repair](../../.agents/skills/pr-repair/SKILL.md) | Coordinate existing-PR review, authorized implementation and repairs | `Use $pr-repair to review PR <URL> and implement scoped corrections.` |
 | [multi-pr-review](../../.agents/skills/multi-pr-review/SKILL.md) | Review several PRs in separate worktrees with evidence for each | `Use $multi-pr-review to review PRs <URL> and <URL> independently.` |
 | [implementation-completeness](../../.agents/skills/implementation-completeness/SKILL.md) | Compare promised behavior with implementation and assertions in every substantive review | `Use $implementation-completeness to compare PR <URL> with its acceptance criteria.` |

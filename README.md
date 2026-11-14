@@ -40,8 +40,10 @@ evidence separate. Review support also covers
 
 Start with [using skills and calling agents](docs/agent-setup/calling-agents.md)
 for available skills, named invocation or direct-file fallback, and a
-copyable contribution request. This is the general developer workspace; the
-`pi-constant-integration-ui` branch carries UI-specific setup.
+copyable contribution request. The UI harness is maintained separately in
+[agent-and-skills-ui](https://github.com/xaime-vp/agent-and-skills-ui);
+the Codex harness lives in
+[agent-and-skills-codex](https://github.com/xaime-vp/agent-and-skills-codex).
 
 Issue handoffs support [free-form preparation](docs/agent-setup/free-form-issues.md)
 as well as legacy executable envelopes. Prose issues need no hand-written JSON:
@@ -124,3 +126,10 @@ Constant Integration retains `profiles/`, sealed Pi skills under `workers/bonsai
 The extraction cleanup in Constant Integration must be merged after this setup is preserved on this repository's base branch. PR links document that dependency; they do not enforce merge order.
 
 Keep `.env*`, `.mcp.json`, credentials, worker state, logs, caches and nested target checkouts out of commits. The ignore rules protect local configuration; connect GitHub MCP in the agent client without publishing credentials. Changes to this setup use a PR in `agent-and-skills-codex`; application changes use a PR in the selected target repository. Neither workflow authorizes merging or deployment by itself.
+
+## Maintaining this harness
+
+Use [skill-maintenance](.agents/skills/skill-maintenance/SKILL.md) for requested skill
+changes. This repository is the codex harness; preserve its root role and
+client discovery paths. Harness instruction updates are direct development work;
+product test/documentation ownership still follows the root contract.
