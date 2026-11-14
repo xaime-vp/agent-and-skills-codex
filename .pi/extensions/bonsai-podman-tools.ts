@@ -6,17 +6,6 @@ import path from "node:path";
 import { Type } from "@earendil-works/pi-ai";
 import { defineTool, type ExtensionAPI } from "@earendil-works/pi-coding-agent";
 
-function toWslPath(winOrRelPath: string, cwd: string): string {
-	const abs = path.resolve(cwd, winOrRelPath);
-	const match = /^([A-Za-z]):[\\/](.*)$/.exec(abs);
-	if (!match) {
-		return abs.replace(/\\/g, "/");
-	}
-	const drive = match[1].toLowerCase();
-	const rest = match[2].replace(/\\/g, "/");
-	return `/mnt/${drive}/${rest}`;
-}
-
 const SAFE_NAME = /^[A-Za-z0-9][A-Za-z0-9_.:/-]*$/;
 const SAFE_SUFFIX = /^[A-Za-z0-9._-]+$/;
 
@@ -45,23 +34,23 @@ const buildImageTool = defineTool({
 	}),
 
 	async execute(_toolCallId, params, signal, _onUpdate, ctx) {
-		const repoWsl = toWslPath(params.repoPath ?? "constant-integration", ctx.cwd);
-		const scriptWsl = toWslPath(".pi/skills/bonsai-podman-ops/scripts/build_image.sh", ctx.cwd);
+		const repoPath = path.resolve(ctx.cwd, params.repoPath ?? "constant-integration");
+		const scriptPath = path.resolve(ctx.cwd, ".agents/skills/bonsai-containers/scripts/podman_wsl.py");
 		if (params.tag && !SAFE_NAME.test(params.tag)) {
 			throw new Error(`Invalid image tag: ${params.tag}`);
 		}
-		const args = ["-d", "podman-machine-default", "-e", "sh", scriptWsl, repoWsl];
-		if (params.tag) args.push(params.tag);
+		const args = ["-3", scriptPath, "build", "--repo", repoPath];
+		if (params.tag) args.push("--tag", params.tag);
 		if (params.runCheck) args.push("--check");
 
-		const res = await piExecRef(args, signal);
+		const res = await piExecPyRef(args, signal);
 		const output = [res.stdout, res.stderr].filter(Boolean).join("\n").trim();
 		if (res.code !== 0) {
 			throw new Error(`bonsai_build_image failed (exit ${res.code}):\n${output}`);
 		}
 		return {
 			content: [{ type: "text", text: output || "Image built." }],
-			details: { repoWsl, tag: params.tag ?? "auto", runCheck: Boolean(params.runCheck) },
+			details: { repoPath, tag: params.tag ?? "auto", runCheck: Boolean(params.runCheck) },
 		};
 	},
 });
@@ -97,8 +86,8 @@ const stopWorkerTool = defineTool({
 		if (params.backupSuffix && !SAFE_SUFFIX.test(params.backupSuffix)) {
 			throw new Error(`Invalid backupSuffix: ${params.backupSuffix}`);
 		}
-		const scriptWsl = toWslPath(".pi/skills/bonsai-podman-ops/scripts/stop_worker.sh", ctx.cwd);
-		const args = ["-d", "podman-machine-default", "-e", "sh", scriptWsl, container];
+		const scriptPath = path.resolve(ctx.cwd, ".agents/skills/bonsai-containers/scripts/podman_wsl.py");
+		const args = ["-3", scriptPath, "stop", container];
 		if (params.backupSuffix) {
 			args.push("--backup-suffix", params.backupSuffix);
 		}
@@ -106,7 +95,7 @@ const stopWorkerTool = defineTool({
 			args.push("--force");
 		}
 
-		const res = await piExecRef(args, signal);
+		const res = await piExecPyRef(args, signal);
 		const output = [res.stdout, res.stderr].filter(Boolean).join("\n").trim();
 		if (res.code !== 0) {
 			throw new Error(`bonsai_stop_worker failed (exit ${res.code}):\n${output}`);
@@ -171,11 +160,9 @@ const workerEventsTool = defineTool({
 	},
 });
 
-let piExecRef: (args: string[], signal?: AbortSignal) => Promise<{ stdout: string; stderr: string; code: number }>;
 let piExecPyRef: (args: string[], signal?: AbortSignal) => Promise<{ stdout: string; stderr: string; code: number }>;
 
 export default function (pi: ExtensionAPI) {
-	piExecRef = (args, signal) => pi.exec("wsl", args, { signal });
 	piExecPyRef = (args, signal) => pi.exec("py", args, { signal });
 	pi.registerTool(buildImageTool);
 	pi.registerTool(stopWorkerTool);

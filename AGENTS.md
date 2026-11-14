@@ -70,6 +70,8 @@ Load supporting skills only when their condition applies:
 
 | Condition | Skill |
 | --- | --- |
+| Finish an existing PR or assess final readiness | [pr-completion](.agents/skills/pr-completion/SKILL.md) |
+| Create or adapt harness skills and instruction routing | [skill-maintenance](.agents/skills/skill-maintenance/SKILL.md) |
 | User names multiple PRs; preserve independent worktrees and evidence | [multi-pr-review](.agents/skills/multi-pr-review/SKILL.md) |
 | Every substantive PR review; compare promised behavior with actual implementation | [implementation-completeness](.agents/skills/implementation-completeness/SKILL.md) |
 | A potential bug is found; verify it with a minimal isolated scenario | [bug-reproduction](.agents/skills/bug-reproduction/SKILL.md) |
