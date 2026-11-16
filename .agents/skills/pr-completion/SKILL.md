@@ -44,3 +44,9 @@ work in draft. Unknown mergeability and missing or pending checks are not passes
 Report URL, branch, reviewed/published SHA, repairs or findings, checks actually
 run, observed asynchronous status, linked worker issues and remaining work.
 Separate application delivery, review readiness and verified merge readiness.
+
+For authorized completion/administration, use [GitHub admin](../github-admin/SKILL.md)
+to mark reviewable drafts ready, apply existing change labels and propose missing
+ones. When merged workflows use `ready-to-merge`, add it after pre-CI readiness,
+then report observed required checks separately. Pending CI cannot be a prerequisite
+for adding its trigger label. Status-only requests still make no metadata writes.

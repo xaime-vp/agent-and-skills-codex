@@ -41,7 +41,7 @@ A PR mention supplies context only. Omitting `--target-pr` or legacy `pull_reque
      --execution-risk medium
    ```
 
-   Only run preparation after the listener is stopped and all role processes are confirmed stopped. Preparation takes the listener lock, refuses active/unknown tasks or publication reservations and does not stop the service itself. It is exclusive regardless of configured 1/2/3 capacity. Lifecycle changes follow the separately authorized container workflow.
+   Only run preparation after the listener is stopped and all role processes are confirmed stopped. Preparation takes the listener lock, refuses active/unknown tasks or publication reservations and does not stop the service itself. It is exclusive regardless of configured 1..10 capacity. Lifecycle changes follow the separately authorized container workflow.
 3. Inspect the returned preparation record using `inspect-preparation KEY`:
 
    ```sh

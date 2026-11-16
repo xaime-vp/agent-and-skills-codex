@@ -54,7 +54,7 @@ read-only installation inspection. Select the container bound to the actual task
 repository; do not assume the default container serves every repository. Image
 revision alone does not establish the volume's sealed release.
 
-Current source uses `agent:test-specialist` and `agent:documentation`. A historical
+Current source supports `agent:coder`, `agent:test-specialist` and `agent:documentation`. The workspace keeps application work with the base developer unless coder delegation is explicitly selected. A historical
 installation can still require `agent:generalist`, explicit token fields, or a
 legacy envelope without free-form preparation support. Verify those facts against
 its sealed parser/configuration before authoring executable work. Do not silently
@@ -77,3 +77,21 @@ Report the workspace/platform/installed revisions separately, commands and actua
 results, failed or unrun checks, and any required owner action. Offline parsing,
 unit tests and synthetic evaluations do not establish live issue-to-PR delivery.
 Pulling source does not stop, start, upgrade or reconfigure an installed worker.
+
+## Compatibility-only authoring and removal
+
+Normal work starts as prose with the [harness routing](agent-harness.md). Only
+load [legacy envelope preparation](../../.agents/skills/bonsai-ci/references/task-preparation.md),
+[single-task schema](../../.agents/skills/bonsai-ci/references/runtime-and-issue.md#legacy-issue-envelope)
+or [ordered execution](../../.agents/skills/bonsai-ci/references/plans.md) when a
+verified installed release or explicitly selected format needs them. Their
+examples are not evidence that the same approval grammar applies to current source.
+
+Keep `tools/validate_task.py` for those callers. Current prose preparation itself
+uses `TaskEnvelope.from_issue` internally, so deleting the parser would break it.
+See the [removal audit](agent-harness.md#legacy-removal-audit) for exact source
+dependencies and migration prerequisites before retiring runtime compatibility.
+
+Workspace skills do not enable the proposed admin/planner/researcher issue routes.
+Verify the implemented registry, merged CI workflows and installed capabilities
+before treating design PRs or labels as active automation.

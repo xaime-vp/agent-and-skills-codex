@@ -1,0 +1,3 @@
+interface:
+  display_name: "Bonsai planner"
+  short_description: "Scope large or vague changes before implementation"

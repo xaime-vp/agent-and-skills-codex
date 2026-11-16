@@ -62,3 +62,12 @@ Return compact validation evidence with the reviewed/published SHA, check outcom
 environment limitations and remaining required work. The coordinator and
 [pr-submission](../pr-submission/SKILL.md) use that evidence for readiness and delivery;
 this skill does not authorize PR mutations, merging or deployment.
+
+## Label-gated CI
+
+Inspect merged workflows and the current PR label/head before interpreting CI.
+When `ready-to-merge` gates jobs, an unlabeled skipped job is not a test pass.
+Path-excluded checks need an explicit not-applicable reason based on policy.
+Pre-CI readiness can justify adding the trigger label under authorized
+administration; CI success is assessed afterward. Keep waiting/unknown separate
+from verified completion and do not poll unless explicitly requested.
