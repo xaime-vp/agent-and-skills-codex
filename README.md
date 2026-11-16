@@ -45,24 +45,33 @@ copyable contribution request. The UI harness is maintained separately in
 the Codex harness lives in
 [agent-and-skills-codex](https://github.com/xaime-vp/agent-and-skills-codex).
 
-Issue handoffs support [free-form preparation](docs/agent-setup/free-form-issues.md)
-as well as legacy executable envelopes. Prose issues need no hand-written JSON:
-an operator selects evidence and the parent PR, then the owner approves the sealed
-proposal digest. Legacy envelopes retain their own schema and standalone approval.
-Verify installed support before execution; issue creation alone does not dispatch
-approved work.
+## Admin, planner and researcher
 
-Current Constant Integration source routes test/fixture work to
-`agent:test-specialist` and documentation to `agent:documentation`. The former
-includes an embedded read-only review; documentation has no model reviewer.
-Generalist/tests are retired source routes. The root developer still owns
-application-code changes. Check the installed sealed release before choosing
-labels or validating an executable assignment; merged source is not deployment.
+The base agent can use [github-admin](.agents/skills/github-admin/SKILL.md) to route
+work, apply existing labels, propose missing labels, mark eligible drafts ready
+for review and report completion. Use [bonsai-planner](.agents/skills/bonsai-planner/SKILL.md)
+before broad or valuable but vague work, and [bonsai-researcher](.agents/skills/bonsai-researcher/SKILL.md)
+for cited feature/competitor evidence. Admin can request researcher directly.
 
-Shared capacity supports 1/2/3 slots (missing setting: one). Separately enabled
-automatic PR commit reviews are read-only advisory comments, not implementation
-handoffs. See [current worker routing and evidence](.agents/skills/bonsai-ci/references/runtime-and-issue.md)
-for bounded review retries, local telemetry export and compatibility limits.
+These are usable workspace skills, not enabled Bonsai runtime profiles. The
+[harness contract](docs/agent-setup/agent-harness.md) describes current support,
+proposed runtime integration, label semantics and the legacy removal audit.
+
+Prefer prose implementation handoffs. Keep issues for approved external worker
+execution; do not create a separate implementation issue for every read-only
+triage, plan or research brief. Current source supports coder, test-specialist
+and documentation. This workspace's default developer keeps application ownership;
+coder delegation must be explicitly selected and verified installed.
+
+Issue `ready` plus one implementation role admits validated worker work. PR
+`ready-to-merge` requests CI only after the label-gate workflow change merges.
+Draft status and descriptive labels are separate. Add the CI label after pre-CI
+readiness, then assess actual checks; skipped unlabeled jobs are not passes.
+
+Source capacity is 1..10 slots (new preparation default 10, missing setting one).
+Automatic review template defaults and installed effective policy differ; verify
+the selected sealed release. Legacy envelopes/approval grammar are
+[compatibility-only](docs/agent-setup/compatibility.md), not default onboarding.
 
 ## Workspace layout
 
@@ -102,7 +111,7 @@ Python 3.12+ is required for the workspace tools. On Windows, use `py -3`; on Li
 
 ```powershell
 py -3 tools/check.py --component orchestrator
-py -3 tools/validate_task.py --repository xaime-vp/constant-integration --body-file path/to/issue.md
+py -3 tools/containers.py --help
 ```
 
 The launchers use `constant-integration/` without copying or relocating its runtime modules. The validator accepts `--platform-root` for a different source checkout. A successful offline parse does not verify an installed worker, its checks or owner approval. CLI installation and worker startup are separate operational actions.

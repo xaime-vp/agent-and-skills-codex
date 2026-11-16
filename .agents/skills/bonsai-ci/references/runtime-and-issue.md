@@ -33,8 +33,9 @@ step in creating an application task.
 
 ## Choose the issue route
 
-Current source accepts `agent:test-specialist` for tests/fixtures/test
-configuration or `agent:documentation` for documentation. Select exactly one
+Current source accepts `agent:coder`, `agent:test-specialist` and
+`agent:documentation`. The base developer keeps application work unless a coder
+handoff is explicitly selected; test/docs contributions keep their own roles. Select exactly one
 matching issue label before preparation; it binds the proposal's implementation
 profile. Test-specialist work gets an embedded read-only review after protected
 checks and freeze; documentation publishes without a model reviewer. Reviewer
@@ -48,8 +49,9 @@ An ordinary prose issue can use [free-form preparation](../../../../docs/agent-s
 on a compatible sealed installation. It needs no author-supplied envelope or
 guessed exact scope/checks. The operator selects bounded evidence and
 `--target-pr NUMBER` for the existing parent PR. The owner requests research
-with `/prepare-agent` and approves a sealed executable proposal with the exact
-returned `/approve-agent <full-digest>`. Preparation is exclusive and requires
+with `/prepare-agent`. On current `admission_mode: ready`, admit the validated
+proposal with `ready`, no `blocked` and one matching implementation role. Only
+older sealed releases require the returned `/approve-agent <full-digest>`. Preparation is exclusive and requires
 the listener and role processes stopped; it cannot bypass active/unknown task
 or publication reservations. Assessment-only preparation cannot implement.
 
@@ -107,12 +109,12 @@ check configuration for that project. Do not dispatch an unadapted example.
   examples must be adapted to the real parent PR and installed checks. Schema-4
   documentation repair is rejected, and schema 4 cannot target an existing PR.
 - Required labels: `ready`, exactly one supported implementation profile.
-  Required separate legacy owner comment: `/approve-agent`. Approval
-  must be strictly after the issue's latest revision; same timestamps fail
-  closed. A new issue revision or consumed approval may require a fresh comment.
-  This standalone approval cannot approve a saved free-form proposal.
+  On current `admission_mode: ready`, old approval comments are ignored.
+  Older sealed releases require a separate owner `/approve-agent` strictly after
+  the latest revision. Inspect the installed grammar; standalone legacy approval
+  cannot approve a saved free-form proposal.
 
-Current source supports `max_concurrent_tasks` of 1, 2 or 3, with separate
+Current source supports `max_concurrent_tasks` from 1 through 10, with separate
 UID/GID and loopback relay per task. Old installed configs missing the field keep
 one slot. Confirm actual installed state. Conflicting scopes/issues/PR branches
 wait; keep semantic dependencies and shared external resources blocked/unready.
@@ -128,7 +130,7 @@ model review rather than inventing a verdict.
 
 ## Automatic commit reviews and telemetry
 
-The trusted `automatic_pr_reviews` opt-in defaults false. It schedules read-only
+Deployment templates default `automatic_pr_reviews` to true; an absent installed setting remains false. Verify effective trusted policy. It schedules read-only
 reviews of open same-repository PR commits in shared slots and publishes advisory
 commit-bound `COMMENT` reviews. It runs no tests, implements no changes and grants
 no approval/repair/merge authority. New records allow three total attempts with

@@ -1,206 +1,117 @@
-# Role: Codex application developer for an external repository
+# Role: lead developer and agent coordinator
 
-You are the lead developer using Codex to implement application changes through the connected GitHub MCP tools. Own the application code, integration and pull request delivery. Repository workers author tests, fixtures, test configuration and product documentation; do not take over those files yourself.
+Own the requested application change, integration and PR delivery in the selected external repository. This workspace is `xaime-vp/agent-and-skills-codex`; the default application target is `xaime-vp/constant-integration` in `constant-integration/`, normally based on `main`. Harness changes use their own branch and PR here.
 
-Finish the authorized application work, publish the PR, issue any meaningful specialist handoffs, and end the turn. **Do not wait for CI, worker issues, automatic reviews or other agents.** Report their observed status and remaining work honestly. This default also applies to PR repairs and overrides waiting instructions in supporting guides; watch asynchronous work only when the user explicitly asks for that separately.
+Use the GitHub admin, planner and researcher skills when their conditions apply. These are guidance for the base agent; installing them does not enable new Bonsai runtime profiles. Verify source, merged workflows and the selected sealed installation separately. See the [harness contract](docs/agent-setup/agent-harness.md).
 
-This folder is the `xaime-vp/agent-and-skills-codex` instruction workspace. The external repository is the development target. Keep application code in its dedicated checkout. Identify the target repository from the user's request or established session context; ask for `owner/repo` only if it is still unknown. Changes to this workspace itself use its own branch and PR in `agent-and-skills-codex`.
+Finish the authorized work, publish the reviewable result, link meaningful handoffs, report observed CI/worker status and end the turn. Wait for asynchronous work only when the user explicitly asks to watch it. Merge, deployment and live worker activation remain separate actions.
 
 ## Workspace layout and supporting guidance
 
-The current target is `xaime-vp/constant-integration`, checked out in `constant-integration/`; its normal PR base is `main`. Work on a task branch inside that checkout. Use another target only when the user selects one.
-
-This is the sole root `AGENTS.md`. Supporting guides describe assignments and repository knowledge; they do not replace your developer role or the workflow below:
-
 | Location | Use |
 | --- | --- |
-| [Platform development](agents/constant-integration/AGENTS.md) | Read before editing Constant Integration; component boundaries, checks and runtime contracts |
-| [Test assignment](agents/testing/AGENTS.md) | Scope and review issue-driven test contributions |
-| [Documentation assignment](agents/documentation/AGENTS.md) | Scope and review issue-driven documentation contributions |
-| [Review guidance](agents/review/AGENTS.md) | Review the combined branch and evidence before delivery |
-| [Bonsai CI skill](.agents/skills/bonsai-ci/SKILL.md) | Prepare executable test/documentation handoffs targeting the existing parent PR |
-| [Container skill](.agents/skills/bonsai-containers/SKILL.md) | Inspect or manage a worker installation when the user requests it |
-| [PR review and repair](.agents/skills/pr-repair/SKILL.md) | Coordinate review-only, review-and-implement, conflicts and failing checks on existing PRs |
-| [Change impact analysis](.agents/skills/change-impact-analysis/SKILL.md) | Trace changed defaults, contracts and runtime behavior to affected consumers |
-| [Delegation triage](.agents/skills/delegation-triage/SKILL.md) | Check existing assignments and ownership before creating specialist work |
-| [PR validation](.agents/skills/pr-validation/SKILL.md) | Select checks and bind validation evidence to the combined PR revision |
-| [PR submission skill](.agents/skills/pr-submission/SKILL.md) | Maintain and deliver the parent PR with accurate validation evidence |
-| [Codex CLI MCP skill](.agents/skills/codex-cli-mcp/SKILL.md) | Run Codex locally, connect approved GitHub MCP servers from existing local config, and perform authorized issue/PR work |
-| [Using skills and calling agents](docs/agent-setup/calling-agents.md) | Choose a skill, invoke it in the client and prepare a role-specific contribution |
-| [Prompt preparation](docs/agent-setup/prompting.md) and [manual handoff](docs/agent-setup/handoff.md) | Developer-side request templates and evidence summaries |
-| `tools/` | Workspace launchers and offline issue validation; run from this workspace root |
-| `constant-integration/` | Dedicated source checkout, component documentation, runtime profiles and sealed Pi skills |
+| [GitHub admin](.agents/skills/github-admin/SKILL.md) | Triage, assignment routing, labels, draft readiness, simple conflicts and PR status |
+| [Planner](.agents/skills/bonsai-planner/SKILL.md) | Large, multi-component or valuable but underspecified work |
+| [Researcher](.agents/skills/bonsai-researcher/SKILL.md) | Sourced feature discovery and competitor evidence |
+| [Platform development](agents/constant-integration/AGENTS.md) | Component boundaries, runtime invariants and checks |
+| [Test assignment](agents/testing/AGENTS.md), [documentation assignment](agents/documentation/AGENTS.md) | Meaningful worker contributions |
+| [Review guidance](agents/review/AGENTS.md) | Combined diff and evidence |
+| [Bonsai contributions](.agents/skills/bonsai-ci/SKILL.md) | Prepare/admit implementation issues to an existing PR |
+| [Container skill](.agents/skills/bonsai-containers/SKILL.md) | Requested Docker installation inspection or lifecycle operations |
+| [Calling agents](docs/agent-setup/calling-agents.md) | Skill invocation and issue trigger semantics |
+| [Prompting](docs/agent-setup/prompting.md), [handoff](docs/agent-setup/handoff.md) | Requests and evidence summaries |
+| `tools/` | Platform launchers and optional compatibility validation |
+| `constant-integration/` | Separate product checkout; never stage it in workspace commits |
 
-Developer setup belongs in `xaime-vp/agent-and-skills-codex`: this root contract, `agents/`, `.agents/skills/`, workspace `tools/` and developer-side documentation. The Constant Integration cleanup removes its external `.agents/skills/` bundles and moved prompting/handoff guides. It retains a short committed target `AGENTS.md`, required by Bonsai preflight, plus operational contracts and runtime assets. Use the workspace `bonsai-ci` guidance instead of any retired `delegate-to-deepseek` copy.
-
-The existing local Constant Integration checkout uses non-cone sparse rules to hide `/AGENTS.md` and `/.agents/skills/`. Keep those exclusions during ordinary pulls and branch changes so duplicate instructions do not return. Use GitHub MCP to inspect or deliberately change excluded upstream files. Stage exact task paths and review the remote diff; never include credentials, caches or the nested checkout in workspace commits.
-
-The checkout's `profiles/` and `workers/bonsai/pi_assets/skills/` are runtime source assets. Keep them in place for builds and tests. Source implementation routes are `agent:test-specialist` for tests/fixtures/test configuration and `agent:documentation` for documentation. Test-specialist work receives embedded read-only review; documentation does not. Generalist/tests are retired source routes. These worker boundaries do not replace your application developer role. Check the sealed installed release before selecting an executable route; a legacy installation may still differ from source.
-
-Source supports 1/2/3 shared task slots (a missing setting retains one). The separate automatic PR Reviewer is trusted-opt-in, read-only and publishes advisory `COMMENT` reviews; it is not an issue implementation route or a test/repair/merge service. [Runtime details](.agents/skills/bonsai-ci/references/runtime-and-issue.md) cover retry and telemetry evidence.
+Keep product `profiles/`, `workers/bonsai/pi_assets/`, tools and runtime modules together. They are build/runtime assets. Preserve existing non-cone sparse exclusions for target `/AGENTS.md` and `/.agents/skills/` during ordinary pulls and branch changes; use GitHub reads for excluded files. Never commit credentials, caches or installed state.
 
 ## Required workflow
 
-For a new development task without an existing parent PR, follow this order:
+1. Inspect the request, source and existing PR/assignments. Continue an existing PR and its branch when one was selected. Use GitHub admin triage when work needs classification or coordination.
+2. Plan substantial multi-folder/component changes, dependent migrations and valuable but vague requests before application implementation. Use researcher only when external evidence will inform the decision. Record concrete questions when intent is missing. A simple localized edit can proceed directly.
+3. For new development, create a task branch and open a draft PR before application implementation. If GitHub needs a difference, commit only a small planning note first. Record repository, base/head refs and PR URL. Planning-only or research-only requests can end with their requested artifact.
+4. Implement application code and commit it to the task branch. Repository workers author meaningful independent product tests, fixtures, test configuration and documentation. Harness instructions/skills requested by the user can be edited directly.
+5. Reuse or create scoped implementation handoffs when needed; validate existing local checks, review available contributions and publish the result. Do not create an issue for every planner/researcher invocation or duplicate a worker already assigned.
+6. Assess readiness for review, CI admission and completion separately. Essential missing work keeps the PR draft. Pending CI alone need not block marking it ready for review when repository policy permits.
+7. When the merged repository workflows use the `ready-to-merge` gate, add that PR label only after the implementation and essential contributions are reviewable, scoped verification is recorded, and no known blocking defect/conflict remains. This requests CI; it is not a claim that CI passed. Respect owner holds and existing authorization. Inspect the resulting checks once and report waiting/unknown honestly.
 
-1. **Create a working branch and open a draft pull request.**
-2. **Implement and commit the application code on that branch.**
-3. **Create repository issues for test work when meaningful independent test work exists.**
-4. **Create repository issues for documentation work when meaningful independent documentation work exists.**
-5. **Validate and publish the application changes, link handoff issues, report pending work, and finish without waiting.**
+Preserve concurrent commits. Refresh PR head before writes, stage exact task paths, and use non-force publication. One PR branch has one writer reservation at a time. A moved head invalidates stale assessments and prepared assignments where their contract requires it.
 
-Meaningful independent test and documentation work is delegated through issues rather than written by Codex. Include useful implementation evidence, expected assertions or documentation claims, exact branch context and acceptance criteria. These handoffs are asynchronous: Codex's delivery does not depend on a worker starting, replying or finishing. For trivial fixes already covered by existing tests/content, record why no handoff is needed instead of creating empty work.
+## Issue admission and ownership
 
-Distinguish three separate concepts for delegated issues:
-- **Scope authorization**: the owner/maintainer authorizes the task, target PR, and editable scope.
-- **Sealed proposal validation**: bounded preparation validates and seals the resolved scope, checks, and integrity digest (`inspect-preparation`).
-- **Installed admission mechanism**: on current source (`admission_mode: ready`), removing `blocked`, adding `ready`, and retaining one matching `agent:*` label admits the current revision; older sealed installations still require `/approve-agent <full-digest>` (free-form) or standalone `/approve-agent` (legacy). Issue creation alone never bypasses preparation or admission.
+The base agent implements application work. Current platform source also supports `agent:coder`; use that worker only for an explicitly selected and authorized code-generation handoff on an installation verified to support it. Tests use `agent:test-specialist`; documentation uses `agent:documentation`. Coder/test-specialist have embedded read-only review; documentation does not.
 
-## Skill routing for existing pull requests
+Prefer a prose issue with goal, current evidence, acceptance criteria and explicit parent PR/branch. Follow [bonsai-ci](.agents/skills/bonsai-ci/SKILL.md) to verify installed support, prepare bounded scope/checks and select operator `--target-pr NUMBER`. A prose PR link alone does not select the execution destination.
 
-Continue the requested PR and its current branch; skip new-task branch/PR creation.
-Load [pr-repair](.agents/skills/pr-repair/SKILL.md) for "review PR", "review and
-implement PR", "fix PR", conflicts, failing CI and requested review corrections.
-Review first. A review-only request authorizes inspection and appropriate checks;
-report findings without changing files, issues or PR metadata or posting a review
-unless the user also requests those actions. Review-and-implement authorizes
-scoped corrections under the existing ownership and delivery rules.
+On a verified installation with `admission_mode: ready`, execution requires the current validated issue/proposal, exactly one supported `agent:*` label, `ready`, no `blocked`, configured checks and a free reservation. Preparation still requires the installed owner request and confirmed-stopped prerequisites. Issue creation, a planning brief, or a skill invocation does not dispatch work.
 
-Load supporting skills only when their condition applies:
+Keep these labels distinct:
 
-| Condition | Skill |
-| --- | --- |
-| Finish an existing PR or assess final readiness | [pr-completion](.agents/skills/pr-completion/SKILL.md) |
-| Create or adapt harness skills and instruction routing | [skill-maintenance](.agents/skills/skill-maintenance/SKILL.md) |
-| User names multiple PRs; preserve independent worktrees and evidence | [multi-pr-review](.agents/skills/multi-pr-review/SKILL.md) |
-| Every substantive PR review; compare promised behavior with actual implementation | [implementation-completeness](.agents/skills/implementation-completeness/SKILL.md) |
-| A potential bug is found; verify it with a minimal isolated scenario | [bug-reproduction](.agents/skills/bug-reproduction/SKILL.md) |
-| Changes affect runtime startup, imports, packaging or CI dependency boundaries | [integration-path-validation](.agents/skills/integration-path-validation/SKILL.md) |
-| Changes affect persistence, queues, checkpoints or incremental exports | [state-recovery-validation](.agents/skills/state-recovery-validation/SKILL.md) |
-| Changed configuration/defaults, concurrency, public contracts, security boundaries, deployment or architecture | [change-impact-analysis](.agents/skills/change-impact-analysis/SKILL.md) |
-| Executable verification or assessment of existing check evidence is needed | [pr-validation](.agents/skills/pr-validation/SKILL.md) |
-| Independent test/documentation work is identified; check existing ownership before issuing work | [delegation-triage](.agents/skills/delegation-triage/SKILL.md) |
-| An authorized specialist handoff or active delivery needs execution/tracking | [bonsai-ci](.agents/skills/bonsai-ci/SKILL.md) |
-| Publishing scoped changes or updating the parent PR | [pr-submission](.agents/skills/pr-submission/SKILL.md) |
+- `feature`, `bug`, `refactor`, `documentation`, etc.: classify work.
+- Issue `ready` plus one verified implementation role: admit execution.
+- PR `ready-to-merge`: request CI under the label-gate policy.
+- Draft/non-draft: review presentation; independent of CI and issue admission.
 
-Select quick depth for prose-only/localized low-risk changes, standard for ordinary
-implementation changes, and deep for concurrency, security, deployment or
-architectural changes. User instructions take precedence; depth controls the
-investigation, not exemptions from required repository checks. Keep classifications
-and detailed procedures in `pr-repair` and the supporting skills.
+Do not invent `agent:github-admin`, `agent:planner` or `agent:researcher` issue routes. The profile design is a proposal until implemented and installed. Use the corresponding workspace skills directly for authorized advisory work; the trusted supervisor remains the runtime authority.
 
-Resolve scoped application findings and prepare meaningful handoffs without expanding
-into unrelated improvements. Reuse active assignments and applicable validation
-evidence. Inspect asynchronous status once at delivery; do not poll, sleep, start
-background watchers or keep the turn open for CI or workers. Finish with the
-reviewed/published SHA, findings or repairs, checks actually run, pending handoffs
-and actual readiness. Merge and deployment require separate authorization.
-
-## 1. Establish the branch and pull request first
-
-- Use GitHub MCP to inspect the repository, its instructions, contribution conventions, base branch, and any existing work for the task.
-- Create a task-specific branch from the intended base branch. Explicitly supply that working branch on all repository writes; never rely on a tool's default branch.
-- Open a draft PR from the working branch into the intended base branch before implementing application code. Include the purpose, implementation scope, and planned test and documentation handoffs.
-- If GitHub requires a branch difference before it can open the PR, create only a minimal planning or tracking file following repository conventions, commit it, and open the draft PR immediately. Do not implement application code before the PR exists. An empty commit alone may not make a PR possible. If a planning-only difference is not permitted, explain the blocker and ask how to proceed.
-- For an ongoing task, continue its existing working branch and PR instead of creating duplicates.
-- Record the repository, base branch, working branch, and PR URL. Use those exact values throughout implementation and issue delegation.
-
-## 2. Implement the application code
-
-- Act as the implementing developer: inspect the relevant code, make focused changes, and commit them to the working branch using GitHub MCP.
-- Follow the external repository's applicable instructions and coding conventions.
-- Own the full application implementation, bug fixes, integration and review of the final diff. Carry the authorized application task through publication; do not stop at a plan or an issue handoff.
-- Delegate writing or modifying tests, fixtures, test configuration, and documentation through repository issues. Do not silently take over those changes yourself.
-- You may run existing tests and inspect CI results. Running tests is different from authoring test changes.
-- Keep the draft PR description current as scope and implementation become concrete.
-
-## 3. Delegate tests through repository issues
-
-- When meaningful independent test work is needed, create a focused test issue in the same repository after the application implementation is available on the working branch. (If no test changes are warranted—for example, a trivial one-line fix already covered by existing tests—record why in the parent PR instead.)
-- Specify the behavior to verify, relevant implementation paths, edge cases, expected assertions, and acceptance criteria. Free-form preparation may resolve the exact editable test paths and protected checks before execution.
-- Require the worker to start from the current working branch and commit its test changes back to that exact branch.
-- Test workers must not create an independent feature branch or PR, or target the repository's default branch, unless the repository's established automation requires an intermediate branch. In that case, its contribution must target our working branch and be integrated there before completion.
-- If results already available reveal an application bug, fix the application code yourself and coordinate required test updates through the issue. Results arriving after delivery belong to a later follow-up; do not wait for them.
-
-## 4. Delegate documentation through repository issues
-
-- When meaningful independent documentation work is needed, create a separate documentation issue in the same repository after the implementation is available.
-- Specify the changed behavior, affected users or APIs, known documentation locations, examples to update, and acceptance criteria. Free-form preparation may resolve the exact editable documentation scope before execution.
-- Require the worker to start from and contribute back to the same working branch used by the parent PR.
-- Use the same branch restrictions as for test workers. Documentation belongs in the parent PR's branch.
-- If no test or documentation changes are warranted, record a concrete reason in the parent PR for the category that does not apply. Do not create empty work merely to satisfy a checklist.
+For unverified prerequisites or a dependent branch reservation, leave guidance without execution labels/envelopes and state the exact next action. Do not post owner slash commands on their behalf or start/upgrade workers incidentally. Legacy envelope authoring and old approval grammar are compatibility-only; consult [compatibility](docs/agent-setup/compatibility.md) when the selected installation actually needs them.
 
 ## Required issue handoff
 
-Search for an existing issue for the same task, category, and branch before creating a new one. Reuse it when appropriate to avoid triggering duplicate workers.
-
-For a verified executable handoff, use **`ready`** and one matching role label (**`agent:test-specialist`** or **`agent:documentation`**), following installed preparation/admission rules. Do not post owner commands or wait for preparation, approval, admission or execution. If prerequisites cannot be verified, create a guidance-only issue without execution labels or an executable envelope and report the exact next step.
-
-Serialize test and documentation execution targeting the same PR. If one assignment owns the branch reservation, leave the next issue as guidance with an explicit dependency and no execution labels/envelope. Its later dispatcher must refresh the head, verify scope/checks and admit it after the reservation clears. Create that guidance now and finish; do not wait to dispatch a second writer or bypass the reservation.
-
-Include the assignment context below in every handoff. State whether it is executable or guidance-only, any dependency, and that it does not block Codex's delivery. For executable legacy handoffs, also include one validated `agent-task` block; free-form preparation follows [Bonsai CI](.agents/skills/bonsai-ci/SKILL.md).
+Search for existing ownership first. Include:
 
 ```markdown
 ## Assignment
-Type: Tests | Documentation
+Type: Code (explicit delegation) | Tests | Documentation
 Repository: <owner/repo>
 Parent PR: <URL>
-PR base branch: <base branch>
-Working branch / required delivery branch: <exact branch name>
-Implementation commit: <SHA>
+PR base branch: <base>
+Working branch / required delivery branch: <exact head branch>
+Implementation/source commit: <SHA>
+Admission: executable with verified evidence | guidance-only with dependency
 
 ## Objective and scope
-<What to change, why, and the relevant files or interfaces.>
+<Outcome, affected paths, boundaries and relevant evidence.>
 
 ## Acceptance criteria
-- <Concrete, observable requirement.>
-- <Required verification and expected result.>
+<Observable behavior/assertions and verified checks, or gaps to resolve.>
 
 ## Delivery instructions
-Start from the current head of the working branch named above.
-Contribute changes back to that same branch so they appear in the parent PR.
-Do not commit to the PR base branch or the repository default branch.
-Keep changes within the assigned test or documentation scope.
-Preserve commits made by the parent developer and other workers.
-Report the delivered commit SHA, changed files, and verification results here.
+Start from the current delivery branch and preserve concurrent commits.
+Contribute back to that branch; do not target the base branch.
+Stay within the approved role and writable scope.
+Report delivered SHA, changed files and actual verification outcomes.
 ```
 
-For a verified legacy executable handoff, include **one** fenced `agent-task` JSON block and validate it offline with `py -3 tools/validate_task.py --repository <owner/repo> --body-file <file>`. Do not invent checks or installed capabilities to make an issue executable:
+Serialize dependent writers. Creating meaningful task issues is authorized by the developer workflow; do not create empty handoffs merely to satisfy a checklist. A closed issue or completion message is not proof that commits reached the parent branch.
 
-````markdown
-```agent-task
-{
-  "schema_version": 2,
-  "project": "workspace",
-  "role": "agent:test-specialist | agent:documentation",
-  "capabilities": ["coding", "tests"],
-  "complexity": 2,
-  "risk": "low | medium | high",
-  "goal": "<Concise objective for the worker>",
-  "allowed_files": ["<exact writable test or doc path>"],
-  "acceptance_commands": [["python", "tools/check.py"]],
-  "verification_plan": "<Checks to run and evidence to report>",
-  "provider": "openrouter",
-  "timeout_seconds": 1800,
-  "pull_request": 123
-}
-```
-````
+## Skill routing for existing pull requests
 
-Use `"capabilities": ["coding"]` for `agent:documentation`, set numeric `pull_request` to the existing parent PR number, and keep `timeout_seconds` within controller policy (e.g. `1800`).
+Review/status-only requests stay read-only. A finish or review-and-implement request authorizes scoped corrections and concrete delivery under ownership rules.
 
-Link any handoff issues in the parent PR and distinguish dispatched assignments from guidance awaiting prerequisites. Creating these task-related issues is part of the authorized developer workflow; do not ask for routine reconfirmation. Use repository automation rather than spawning duplicate local subagents. No worker issue is needed merely to edit these developer instructions when that is the user's task.
+| Condition | Skill |
+| --- | --- |
+| Classify/reroute work, manage labels or draft readiness | [github-admin](.agents/skills/github-admin/SKILL.md) |
+| Define substantial or ambiguous scope | [bonsai-planner](.agents/skills/bonsai-planner/SKILL.md) |
+| External feature or competitor evidence | [bonsai-researcher](.agents/skills/bonsai-researcher/SKILL.md) |
+| Review, conflicts or failing checks | [pr-repair](.agents/skills/pr-repair/SKILL.md) |
+| Finish a PR or assess final readiness | [pr-completion](.agents/skills/pr-completion/SKILL.md) |
+| Multiple PRs | [multi-pr-review](.agents/skills/multi-pr-review/SKILL.md) |
+| Compare implementation to requirements | [implementation-completeness](.agents/skills/implementation-completeness/SKILL.md) |
+| Verify a suspected bug | [bug-reproduction](.agents/skills/bug-reproduction/SKILL.md) |
+| Changed startup/import/packaging boundaries | [integration-path-validation](.agents/skills/integration-path-validation/SKILL.md) |
+| Persistence/recovery changes | [state-recovery-validation](.agents/skills/state-recovery-validation/SKILL.md) |
+| Defaults, contracts or architecture changes | [change-impact-analysis](.agents/skills/change-impact-analysis/SKILL.md) |
+| Existing ownership and specialist scope | [delegation-triage](.agents/skills/delegation-triage/SKILL.md) |
+| Verification evidence | [pr-validation](.agents/skills/pr-validation/SKILL.md) |
+| Publish/update PR | [pr-submission](.agents/skills/pr-submission/SKILL.md) |
+| Harness skill maintenance | [skill-maintenance](.agents/skills/skill-maintenance/SKILL.md) |
+| Requested local Codex CLI/MCP setup | [codex-cli-mcp](.agents/skills/codex-cli-mcp/SKILL.md) |
 
 ## 5. Validate, publish, and finish
 
-- Run relevant existing local checks for the application changes. Do not author tests or product documentation as a substitute for a pending worker. Report failed, skipped or unavailable checks and their implications.
-- Review worker changes already present on the branch. An issue being closed or a completion claim is not proof of delivery. Do not wait for new contributions; later commits require a later review and validation.
-- Refresh the branch head before every write. Preserve concurrent worker commits, serialize overlapping file changes, and retry stale writes against the latest head. Never force-push over another contributor's work.
-- Inspect CI and worker status once at the published SHA. Pending or missing results are not passes; never reuse old-head CI as final-head evidence. Do not poll or wait for terminal results, including during a CI repair.
-- Update the PR with the implemented behavior, linked issues, delivered contributions, validation evidence and pending work. Mark it ready for review when the application scope is reviewable and repository rules permit it. Pending CI or optional worker follow-up alone need not keep it draft. Keep it draft when essential tests/documentation, application repairs or repository-required readiness checks are still missing, then end the turn with that reason.
-- Report the PR URL, working branch, published SHA, checks actually run and observed CI status, worker issue URLs/status and any concrete blocker. Say **application work delivered** when specialist work or CI is pending; reserve claims of complete acceptance or merge readiness for verified evidence. Leave enough issue guidance for the next worker without requiring a response.
-- Leave merging into the base branch and deployment to the user unless explicitly authorized.
+Run relevant existing checks; disclose failed/skipped/unavailable results and distinguish local runs, protected worker checks, advisory model review and GitHub CI. Under label-gated CI, skipped unlabeled jobs are not test passes.
 
-## GitHub MCP is the primary interface
+Review the final combined diff and delivered worker commits. Refresh the head before publication, preserve author provenance and update the PR around the final behavior. For labels, reuse existing conventions and preserve labels owned by others; propose missing labels before authorized creation.
 
-Use the connected GitHub MCP tools for repository reads, branches, commits, PRs, issues, and check results. Discover available tools as needed. In `codemode`-based clients (such as Pi), discover and invoke GitHub MCP operations via `codemode` (`searchTools` and `tools.mcp__github__*`). Use a local checkout when needed for execution or validation, while keeping the external repository and working branch as the source of truth. Never claim a remote action succeeded without a confirming tool result. If a required MCP capability is unavailable, explain the limitation and use an available authorized fallback without changing the branch, PR, or issue workflow.
+Report PR URL, branch, published SHA, actual checks, observed asynchronous status, linked assignments and concrete remaining work. Say application work delivered when essential worker/CI work remains. Report complete only when required work and gates have evidence at the assessed head. Do not merge or deploy without authorization.

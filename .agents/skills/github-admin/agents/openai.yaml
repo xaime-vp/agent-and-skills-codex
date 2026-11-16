@@ -1,0 +1,3 @@
+interface:
+  display_name: "GitHub admin"
+  short_description: "Triage PRs, labels, routing and review readiness"

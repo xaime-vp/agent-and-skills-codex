@@ -15,11 +15,10 @@ tests and product documentation through `bonsai-ci` handoffs to its existing bra
 These handoffs do not block Codex's delivery. This submission skill
 does not independently create another worker task or another PR.
 
-Handoffs can use free-form preparation with operator-selected `--target-pr` and
-digest-bound proposal approval, or legacy envelopes with numeric `pull_request`
-and standalone approval. Follow `bonsai-ci` for the selected route; issue creation
-does not require a hand-written envelope in the free-form workflow. Record the
-actual sealed proposal/approval and delivery evidence when used.
+Prefer prose handoffs with operator-selected `--target-pr` and verified
+installed admission. Follow `bonsai-ci`; current `admission_mode: ready` and old
+approval grammar are different release contracts. Consult compatibility references
+only when needed. Issue creation does not require hand-written envelopes.
 
 Sparse-checkout rules hide the checkout's original user-facing skills and agent
 file; adapted copies live in this workspace. Preserve those exclusions during
@@ -125,3 +124,16 @@ acceptance or merge readiness. If the active client
 provides a PR artifact tool, attach the PR to the chat; otherwise return the PR
 link, brief scope, validation limits and any action needed from the owner. Owner
 acceptance, merge and deployment remain separate decisions.
+
+## Label-gated CI and readiness
+
+Use [GitHub admin](../github-admin/SKILL.md) for authorized metadata actions.
+Verify the merged workflows before applying `ready-to-merge`. Add that label
+after implementation/essential contributions are reviewable and local evidence
+is recorded; it requests CI and does not claim success. Do not wait for CI to pass
+before applying its trigger. Marking a draft ready is an independent transition.
+Respect owner holds, refresh the head and preserve existing labels. Propose absent
+labels before creation unless label-creation authority already exists.
+
+Inspect resulting checks once and finish. Report waiting/unknown when required
+evidence is absent; skipped jobs on an unlabeled PR are not executed checks.

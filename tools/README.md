@@ -7,7 +7,6 @@ py -3 tools/check.py --component orchestrator
 py -3 tools/check.py --component worker
 py -3 tools/containers.py --help
 py -3 tools/podman_worker.py status
-py -3 tools/validate_task.py --repository xaime-vp/constant-integration --body-file path/to/issue.md
 ```
 
 `check.py` and `containers.py` launch the dedicated checkout's originals with their expected imports and working directory. Keep the checkout's `tools/` intact: container packaging, platform imports and isolated E2E fixtures depend on those paths. E2E probes remain there and should be selected deliberately using the platform CI guide.
@@ -56,3 +55,10 @@ child only. Delivery auditing does not replace the consumer's schema validator
 or business-level idempotency checks. Read each owning skill for evidence and
 interpretation limits. None of these tools fetches or publishes PRs, starts a
 live worker, or changes installed runtime state.
+
+## Compatibility validator
+
+`validate_task.py` remains available only for verified envelope-format compatibility
+work. Prefer prose [Bonsai contributions](../.agents/skills/bonsai-ci/SKILL.md)
+for new assignments. Read [compatibility](../docs/agent-setup/compatibility.md)
+before choosing a parser revision or approval grammar; parsing does not admit work.

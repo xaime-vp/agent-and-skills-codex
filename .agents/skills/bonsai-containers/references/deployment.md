@@ -89,7 +89,7 @@ actual local relay socket rather than reporting a config-file healthcheck as
 runtime readiness. Relay ports stay inside each container, without host ports.
 
 Inspect the installed concurrency setting: current source preparation supports
-1/2/3 shared task slots; legacy configs without the field keep one. A launch env edit alone does
+1..10 shared task slots; legacy configs without the field keep one. A launch env edit alone does
 not replace the sealed release/configuration. For native Podman launches, preserve the 45-second stop grace with
 `--stop-timeout 45`. Task relays use separate ephemeral
 container-internal ports; the listener keeps its own idle readiness relay.
