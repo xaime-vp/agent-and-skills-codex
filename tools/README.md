@@ -6,17 +6,10 @@ Run these from the workspace root with Python 3.12+ (`py -3` on Windows):
 py -3 tools/check.py --component orchestrator
 py -3 tools/check.py --component worker
 py -3 tools/containers.py --help
-py -3 tools/podman_worker.py status
 py -3 tools/validate_task.py --repository xaime-vp/constant-integration --body-file path/to/issue.md
 ```
 
 `check.py` and `containers.py` launch the dedicated checkout's originals with their expected imports and working directory. Keep the checkout's `tools/` intact: container packaging, platform imports and isolated E2E fixtures depend on those paths. E2E probes remain there and should be selected deliberately using the platform CI guide.
-
-`podman_worker.py` manages Bonsai worker containers on Podman (via `wsl -d podman-machine-default` on Windows or `podman` directly on Linux):
-- `status`: inspect running/stopped containers, configured slots/reviewer/containment, and active/recent tasks in `state.db` (`--json` supported).
-- `build`: build `localhost/bonsai-worker:main-<shortsha>` from a clean detached `git worktree` (e.g. `--ref origin/main`) without touching uncommitted local work.
-- `relaunch`: safely check for active tasks/processes, stop and back up the existing container, run `configure` + `install` on the existing state volume (inheriting current settings unless overridden with `--max-concurrent-tasks`, `--automatic-pr-reviews`, `--process-containment`, `--model`), and start the upgraded container (`--dry-run` supported).
-- `reconcile`: safely stop, optionally update `process_containment` in both `config.json` and `private/prepared-config.json`, run `--reconcile-task --confirmed-stopped`, and restart.
 
 `validate_task.py` was relocated from the retired `delegate-to-deepseek` bundle. It defaults to the sibling `constant-integration/` checkout and accepts `--platform-root` to validate against another source revision. It only parses an issue offline; success proves neither installed compatibility nor approval, readiness or protected-check configuration. Set the installed timeout ceiling with `--max-timeout-seconds` when applicable.
 

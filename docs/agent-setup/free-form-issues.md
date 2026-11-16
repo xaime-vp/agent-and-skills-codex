@@ -29,30 +29,11 @@ A PR mention supplies context only. Omitting `--target-pr` or legacy `pull_reque
      --execution-risk medium
    ```
 
-   On Windows with Podman in WSL (`podman-machine-default`, where `podman` is not on the Windows `PATH`), follow the current [container skill](../../.agents/skills/bonsai-containers/SKILL.md) for separately authorized inspection and stopped-state preparation. Verify the selected container's sealed release/configuration, confirm role processes stopped, then run against its existing state volume:
-
-   ```sh
-   wsl -d podman-machine-default -e podman run --rm --volumes-from bonsai-worker \
-     -e PODMAN_IGNORE_CGROUPSV1_WARNING=1 \
-     -e BONSAI_TARGET_REPOSITORY=xaime-vp/constant-integration \
-     localhost/bonsai-worker:<tag> prepare-issue 17 \
-     --request-comment 70 --target-pr 42 \
-     --research-file app/src/parser.py --research-file app/tests/test_parser.py \
-     --execution-risk medium
-   ```
-
    Only run preparation after the listener is stopped and all role processes are confirmed stopped. Preparation takes the listener lock, refuses active/unknown tasks or publication reservations and does not stop the service itself. It is exclusive regardless of configured 1/2/3 capacity. Lifecycle changes follow the separately authorized container workflow.
 3. Inspect the returned preparation record using `inspect-preparation KEY`:
 
    ```sh
-   # Docker Compose
    docker compose -f workers/bonsai/compose.yaml run --rm worker inspect-preparation KEY
-
-   # Podman in WSL (podman-machine-default)
-   wsl -d podman-machine-default -e podman run --rm --volumes-from bonsai-worker \
-     -e PODMAN_IGNORE_CGROUPSV1_WARNING=1 \
-     -e BONSAI_TARGET_REPOSITORY=xaime-vp/constant-integration \
-     localhost/bonsai-worker:<tag> inspect-preparation KEY
    ```
 
    Review original requirements, assessment, questions/gaps, exact files, protected checks, limits and pinned source/PR destination. Research reads an operator-selected committed corpus and saved same-repository PR evidence; it does not run repository commands or browse arbitrary URLs. Missing evidence must become a gap/question. Any gap/question prevents an executable proposal; request another pass with appropriate evidence.

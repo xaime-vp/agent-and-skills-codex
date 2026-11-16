@@ -3,7 +3,7 @@
 Routine operations use [the lifecycle CLI](../../../../constant-integration/docs/CONTAINER_LIFECYCLE.md).
 This reference is for initial setup and exceptional recovery. The first adapter
 requires native Docker Engine through a local Unix socket. It explicitly rejects
-Podman wrappers, Compose-owned containers and remote engines. Do not bypass a
+Compose-owned containers and remote engines. Do not bypass a
 rejection or register a misleading engine identity. Retain this manual procedure
 for unsupported installations until their adapter has isolated integration tests.
 
@@ -66,14 +66,12 @@ Use Contents, Issues and Pull requests permissions appropriate to the approved
 workflow. A 404 does not prove the repository is absent. Ask the owner to grant
 the selected credential access; never substitute another credential silently.
 
-## Engine differences and readiness
+## Docker readiness
 
-The user's host has used Podman through WSL `podman-machine-default`; discover
-the current engine with inventory first. Docker Compose may render successfully
-while its attached `run` fails against a Podman API. Inspect whether the attempted
-container started before retrying. Native Podman commands are an alternative;
-preserve the same image, target, volume, mounts, capabilities and credential
-boundaries. Do not add unrelated daemons or repeatedly retry the same failure.
+Confirm the selected Docker Engine and installation before running Compose or
+the lifecycle CLI. Inspect whether an attempted container started before retrying.
+Preserve the same image, target, volume, mounts, capabilities and credential
+boundaries during recovery.
 
 The current controller capability set is `CHOWN,FOWNER,SETUID,SETGID,DAC_OVERRIDE,KILL`
 after dropping all others; roles use distinct task-slot UIDs/GIDs (10001/10002/10003 for three default slots). Check current Compose code
@@ -83,15 +81,13 @@ restricted. Image builds from Windows must preserve executable shell files and
 LF endings; a clean Git archive can provide a Linux build context.
 
 On rootless cgroups v1, configured memory/PID limits may be ignored and process
-containment falls back to sessions. Disclose the observed limitation. Some
-Podman OCI builds ignore image healthchecks, so verify the listener lock and
-actual local relay socket rather than reporting a config-file healthcheck as
-runtime readiness. Relay ports stay inside each container, without host ports.
+containment falls back to sessions. Disclose the observed limitation. Verify the
+listener lock and actual local relay socket rather than reporting a config-file
+healthcheck as runtime readiness. Relay ports stay inside each container, without host ports.
 
 Inspect the installed concurrency setting: current source preparation supports
 1/2/3 shared task slots; legacy configs without the field keep one. A launch env edit alone does
-not replace the sealed release/configuration. For native Podman launches, preserve the 45-second stop grace with
-`--stop-timeout 45`. Task relays use separate ephemeral
+not replace the sealed release/configuration. Task relays use separate ephemeral
 container-internal ports; the listener keeps its own idle readiness relay.
 
 Separate evidence for repository access, target binding, a held listener lock,

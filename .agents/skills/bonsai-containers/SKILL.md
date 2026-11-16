@@ -15,26 +15,6 @@ WSL, with a private registry on the Linux filesystem. See
 [CLI operations](../../../constant-integration/docs/CONTAINER_LIFECYCLE.md) for registration,
 supported engines, outputs and recovery.
 
-On Windows with Podman running inside WSL (`podman-machine-default`), use
-[scripts/podman_wsl.py](scripts/podman_wsl.py) from the workspace root:
-
-```sh
-py -3 .agents/skills/bonsai-containers/scripts/podman_wsl.py inspect
-py -3 .agents/skills/bonsai-containers/scripts/podman_wsl.py issue-status 204 --container bonsai-worker
-py -3 .agents/skills/bonsai-containers/scripts/podman_wsl.py events --container bonsai-worker --tail 30 --filter 204
-py -3 .agents/skills/bonsai-containers/scripts/podman_wsl.py task-status bonsai-worker --issue 204
-py -3 .agents/skills/bonsai-containers/scripts/podman_wsl.py logs bonsai-worker --controller --tail 50
-py -3 .agents/skills/bonsai-containers/scripts/podman_wsl.py build --check
-py -3 .agents/skills/bonsai-containers/scripts/podman_wsl.py stop bonsai-worker --backup-suffix 20f8bf5
-py -3 .agents/skills/bonsai-containers/scripts/podman_wsl.py relaunch bonsai-worker
-py -3 .agents/skills/bonsai-containers/scripts/podman_wsl.py upgrade bonsai-worker --start
-py -3 .agents/skills/bonsai-containers/scripts/podman_wsl.py action bonsai-worker inspect-preparation KEY
-```
-
-- `podman_wsl.py` checks `/proc` for active `task_process`/`pi`/`check.py` work before stopping (`--force` overrides), backs up the previous container as `<container>-before-<suffix>`, preserves `/var/lib/bonsaiworker` volume mounts and `BONSAI_*` settings without exposing secrets, and refuses `prepare-issue` while the target worker is still running.
-- Use `upgrade` (not `relaunch`) whenever you want the volume's sealed release (`/var/lib/bonsaiworker/config.json` `app_root`/`release_root`) updated from the new image via `prepare` + `install`; `upgrade` leaves the container stopped unless `--start` is passed.
-- If the Pi session exposes `bonsai_build_image` / `bonsai_stop_worker` / `bonsai_worker_events` extension tools, they wrap the `podman-machine-default` build, `/proc`-checked stop/backup, and `podman_wsl.py events --container bonsai-worker --tail 10` flows.
-
 1. Identify **restart** (same image/release, no migration), **recreation** (new
    container, preserved settings/volume), or **upgrade** (pinned source build,
    checks, backup, install/migration and recreation).
