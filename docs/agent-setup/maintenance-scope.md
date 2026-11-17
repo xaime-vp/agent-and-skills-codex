@@ -1,8 +1,8 @@
-﻿# Harness maintenance scope
+# Harness maintenance scope
 
-Preserve this harness role while repairing discovery and stale references. Add
-focused skill authoring guidance and role-specific verification where missing.
-Validate skill metadata, links and existing helper checks.
+Repair skill discovery after the Pi migration, preserve the general developer role,
+and add focused guidance for maintaining skills without copying incompatible client
+assumptions. Validate skill metadata, local links and existing helper checks.
 
-These requested developer-instruction updates do not require product test or
-documentation worker assignments.
+This task changes the developer harness itself; product test and documentation
+worker handoffs are not required for these requested instruction updates.

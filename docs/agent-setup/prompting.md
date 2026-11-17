@@ -1,27 +1,29 @@
 # Prompting a coding agent for a Bonsai task
 
-This developer-side guide is maintained in `xaime-vp/agent-and-skills-codex`.
+This developer-side guide is maintained in `xaime-vp/agent-and-skills`.
 Follow the [root developer contract](../../AGENTS.md) for the active workflow:
-the root agent implements application code and uses scoped issues for worker-authored
-tests and documentation on its existing parent PR. Codex reports pending handoffs
-and finishes without waiting for CI or workers. Free-form preparation
+in the developer-led path the root agent implements application code and uses
+scoped test/documentation issues for its existing parent PR. Separately delegated
+`agent:coder` implementation follows the supervisor-owned [coder guide](../../agents/coding/AGENTS.md). Free-form preparation
 selects it with operator `--target-pr NUMBER`; legacy envelopes use numeric
 `pull_request`. A PR mention alone does not select the destination. The general
 preparation prompts below apply when explicitly preparing a task or ordered
 plan; they do not replace that branch/PR workflow.
 
-Current source worker scope is tests/fixtures/test configuration under
-`agent:test-specialist` or documentation under `agent:documentation`. Select one
-matching label before preparation and verify sealed installed support. Do not
-ask either profile to implement application-code changes. Generalist/tests are
-retired source routes. The separate automatic PR Reviewer is trusted-opt-in and
+Current source supports `agent:coder` for deliberately delegated code tasks and
+explicitly authorized related tests/docs, `agent:test-specialist` for test work,
+and `agent:documentation` for documentation. Select one matching label and
+verify sealed installed support. In the **developer-led** workflow, keep code
+with the root developer and tests/docs with their scoped specialists; do not
+run a competing coder writer. Generalist/tests are retired source routes.
+See the [capability map](platform-capabilities.md). The separate automatic PR Reviewer is trusted-opt-in and
 read-only, not an implementation request.
 
 Use this guide to turn a request into a clear issue for the
-[supervised worker](../../constant-integration/docs/SUBMITTING_TASKS.md). It is written for compatible coding
+[supervised worker](https://github.com/xaime-vp/constant-integration/blob/main/docs/SUBMITTING_TASKS.md). It is written for compatible coding
 agents, but skill-discovery and invocation syntax differs by product; follow the
 instructions for the agent you actually use. The repository's
-[reusable skills](../../README.md) can provide more specific
+[reusable skills](https://github.com/xaime-vp/agent-and-skills/blob/a701dcf2de332cce285b49c0b7c609f2d75d4328/README.md) can provide more specific
 guidance where supported.
 
 A prompt prepares a request; it does not approve or dispatch work. A skill,
@@ -53,7 +55,8 @@ resolve. Do not require agent-task JSON. Do not submit or approve the issue as
 part of this preparation-only request.
 
 Identify the operator's required parent destination (--target-pr NUMBER),
-matching role label (agent:test-specialist or agent:documentation), and
+matching role label (agent:coder for explicitly delegated code work,
+agent:test-specialist or agent:documentation), and
 candidate committed research files, distinguishing suggestions from verified
 evidence. Keep the issue blocked without ready. The configured owner must
 request research with /prepare-agent, then inspect the sealed proposal
@@ -122,7 +125,9 @@ Dependencies / evidence:
 Inspect the target instructions, current implementation and protected checks.
 Propose one or more ordered, time-bounded steps within the brief-size limit. Each step must include its exact verified
 file scope within the selected test or documentation profile and leave the
-protected checks passing. Application fixes stay with the root developer.
+protected checks passing. Application fixes stay with the root developer in
+  the developer-led workflow; an independently authorized coder plan may edit
+  code only within its approved scope.
 Use the same protected command set at each step and for
 the final candidate. Do not claim local/documented commands are protected until
 matched to the installed configuration.
@@ -157,7 +162,7 @@ into separate issues unless explicitly requested.
   target CI. Do not report a pass when a check is missing, pending, failed, or
   observed on an older head.
 
-See [single-task submission](../../constant-integration/docs/SUBMITTING_TASKS.md),
-[plan guidance](../../constant-integration/docs/submitting-tasks/plans.md),
-[the task envelope](../../constant-integration/docs/submitting-tasks/envelope.md), and the
-[role and evidence contract](../../constant-integration/docs/AGENT_ROLES.md).
+See [single-task submission](https://github.com/xaime-vp/constant-integration/blob/main/docs/SUBMITTING_TASKS.md),
+[plan guidance](https://github.com/xaime-vp/constant-integration/blob/main/docs/submitting-tasks/plans.md),
+[the task envelope](https://github.com/xaime-vp/constant-integration/blob/main/docs/submitting-tasks/envelope.md), and the
+[role and evidence contract](https://github.com/xaime-vp/constant-integration/blob/main/docs/AGENT_ROLES.md).

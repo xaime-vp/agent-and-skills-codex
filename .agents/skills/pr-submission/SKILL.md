@@ -9,26 +9,27 @@ Keep `references/` alongside `SKILL.md` (see `README.md` for skill installation;
 
 Support the [root Git developer](../../../AGENTS.md). Source changes live in
 `constant-integration/`; GitHub MCP owns remote branch, commit, PR and issue
-operations. Open the parent draft before application implementation, then
-maintain that PR throughout the task. Codex authors application code; workers author
-tests and product documentation through `bonsai-ci` handoffs to its existing branch.
-These handoffs do not block Codex's delivery. This submission skill
+operations. Create a task branch, implement and commit a meaningful initial
+change, then open the draft PR before any specialist dispatch targeting it.
+Write tightly coupled tests/docs with the change; use `bonsai-ci` only for
+substantial independent or explicitly requested specialist work. This submission skill
 does not independently create another worker task or another PR.
 
 Handoffs can use free-form preparation with operator-selected `--target-pr` and
-digest-bound proposal approval, or legacy envelopes with numeric `pull_request`
-and standalone approval. Follow `bonsai-ci` for the selected route; issue creation
+sealed-proposal inspection, or legacy envelopes with numeric `pull_request`.
+Current source admits verified work through `ready` without `blocked` and one
+matching role label; older installed releases may require digest/standalone
+`/approve-agent` comments. Follow `bonsai-ci` for the selected route; issue creation
 does not require a hand-written envelope in the free-form workflow. Record the
 actual sealed proposal/approval and delivery evidence when used.
 
-Sparse-checkout rules hide the checkout's original user-facing skills and agent
-file; adapted copies live in this workspace. Preserve those exclusions during
-ordinary branch changes. Select exact task paths and review the remote diff.
-Developer setup is maintained in `xaime-vp/agent-and-skills-codex`. The extraction
-cleanup removes all external `.agents/skills/` bundles and moved developer
-guides from Constant Integration; its short target contract and runtime assets
-remain upstream. Keep each repository's changes in its own PR and link the
-extraction dependency so the setup is preserved before the source cleanup merges.
+A target checkout may have optional sparse-checkout exclusions for old
+external skills or `AGENTS.md`; preserve existing local exclusions on ordinary
+branch changes. Target root `AGENTS.md` is optional to current Bonsai preflight.
+Developer setup lives in `xaime-vp/agent-and-skills`, while the platform retains
+operational contracts and sealed runtime assets. Keep each repository's changes
+in its own PR, select exact task paths and review the remote diff. Do not assume
+a historic extraction dependency remains open.
 
 Produce a reviewable PR against the intended repository and base, with an honest
 account of behavior, validation and delegated contributions. Follow the target
@@ -47,12 +48,19 @@ to delegate, publish, approve worker execution, merge or deploy.
 3. Review the actual final diff, including delegated changes. Check scope,
    correctness and sensitive data; an agent's completion message is not evidence
    that the diff or checks are correct. Disclose unresolved findings.
-4. Run the target's appropriate existing local checks. Record the
+4. Run the target's appropriate checks and required pre-merge checks. Record the
    command, exit/status, source revision and environment limitations. Distinguish
    tests you ran from worker check records, advisory model review and target CI.
    Keep failed, skipped and unrun checks visible. Do not run live workers, paid
-   models, installations or external mutations as incidental validation. Report
-   outstanding pre-merge checks without waiting for remote execution.
+   models, installations or external mutations as incidental validation.
+
+5. **Post-commit branch verification**: After committing, verify that the active
+   branch still matches the initial working branch (and descends from the
+   initial commit) before pushing or updating the PR:
+   ```sh
+   py -3 .agents/skills/pr-submission/scripts/verify_branch.py --repo <checkout> --expected-branch <initial-branch> --initial-sha <initial-sha>
+   ```
+   (Or use the `verify_commit_branch` Pi tool when running inside Pi.)
 
 ## Attribute delegated functions
 
@@ -107,21 +115,16 @@ GitHub tool when sufficient. With `gh`, pass multiline bodies through a file
 using `--body-file`; do not interpolate untrusted text into shell code.
 
 Push only the scoped branch, create/update the intended PR, and use draft status
-when required by the repository or when essential implementation, tests or product
-documentation remain incomplete. Pending CI or optional worker follow-ups alone
-do not prevent marking a reviewable PR ready when repository rules permit it. Disclose
+when required by the repository or when the change is incomplete. Disclose
 semantic, state/configuration and rollback changes. Do not overwrite a
 concurrently changed PR head. In a Bonsai worker task, the supervisor alone owns
 Git and publication; model-driven roles supply their assigned implementation or
 review output without publishing themselves. Preserve mandatory draft findings.
 
-After publication, inspect GitHub checks once at the exact PR head. Record success,
+After publication, inspect GitHub checks at the exact PR head. Record success,
 failure, pending or unavailable status without treating old-head results as
-current. Report the observed status and worker issue links, then finish. Do not
-poll, sleep or start a background watcher for CI, automatic reviews or agents.
-Only an explicit user request to watch asynchronous work changes that default;
-a CI repair request alone does not. Separate application delivery from unverified
-acceptance or merge readiness. If the active client
+current. Follow explicit requests to watch CI through completion; otherwise
+report the observed status without implying a pass. If the active client
 provides a PR artifact tool, attach the PR to the chat; otherwise return the PR
 link, brief scope, validation limits and any action needed from the owner. Owner
 acceptance, merge and deployment remain separate decisions.

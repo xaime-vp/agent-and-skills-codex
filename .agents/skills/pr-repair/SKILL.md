@@ -8,10 +8,8 @@ description: Review existing GitHub pull requests and carry authorized correctio
 Coordinate review, scoped remediation and final verification on each existing PR
 branch. For review-only requests, inspect and report without modifying source,
 creating issues, updating PR metadata or publishing review comments unless requested.
-For review-and-implement or repair requests, carry authorized application corrections
-through publication and available verification. Workers retain test/documentation
-authorship. Leave concrete handoffs and finish without waiting for CI or agents,
-unless the user explicitly requests a watch. A local pass alone does not establish delivery.
+For review-and-implement or repair requests, carry authorized corrections through
+publication and verification. A local pass alone does not establish delivery.
 
 ## Recover the current state
 
@@ -64,11 +62,12 @@ Use [delegation-triage](../delegation-triage/SKILL.md) when independent speciali
 work is identified, before dispatching anything. Follow
 repository ownership rules: repairing application behavior and mechanically
 integrating unchanged contributions differ from authoring new assertions,
-fixtures or documentation. Delegate new test/documentation content when required;
-do not weaken assertions to obtain a green check. Even mechanical test integration
+fixtures or documentation. The developer may author tightly coupled tests/docs;
+delegate substantial independent work or an explicit specialist assignment.
+Do not weaken assertions to obtain a green check. Even mechanical test integration
 must respect stricter repository rules.
 
-In the agent-and-skills-codex workspace, load [bonsai-ci](../bonsai-ci/SKILL.md) only
+In the agent-and-skills workspace, load [bonsai-ci](../bonsai-ci/SKILL.md) only
 for an authorized handoff or active delivery tracking. It owns installed-route
 selection, preparation and release-specific admission; do not infer approval
 requirements from historical transcripts. Use [pr-submission](../pr-submission/SKILL.md)
@@ -125,25 +124,24 @@ Use [pr-validation](../pr-validation/SKILL.md) to choose checks and reconcile lo
 worker and GitHub evidence. Review the combined diff against the actual base for
 lost tests, unrelated changes and unintended behavior, including automatic merges.
 
-After publication, fetch the PR and inspect checks and available worker delivery
-once at its exact head SHA. Report unknown mergeability as unknown. A request to
-fix failing CI does not imply waiting for the new run. Review contributions already
-on the branch; leave pending contributions linked for later review. Do not poll,
-sleep or start a background watcher. Inspect available failure evidence when useful
-and report the missing prerequisite without keeping the turn open.
+After publication, fetch the PR again and inspect checks at its exact head SHA.
+Confirm mergeability after GitHub finishes calculating it; unknown is not success.
+For a request to fix failing CI, follow the affected runs to a terminal result or
+a concrete blocker. For required worker delivery, follow the contribution through
+its actual branch commit. Use bounded waits with backoff when nothing changes;
+batch independent status reads and avoid repeatedly fetching the same full diff.
+A pending run is not itself a blocker. If progress stalls, inspect the relevant
+failure or missing prerequisite rather than spinning on status requests.
 
-Keep work in draft when essential implementation, tests or documentation remain
-missing, or when repository readiness rules require it. Pending CI or optional
-worker follow-ups alone do not prevent review when repository rules permit it.
+Keep incomplete work in draft when required by the repository. Do not mark a PR
+ready while required worker contributions, checks or repairs remain outstanding.
 Update its description with the final behavior, contribution provenance and
-validation evidence and pending work when updates are authorized. Mark reviewable
-work ready under the root workflow without claiming unverified merge readiness.
-Review-only work reports readiness
+validation evidence when updates are authorized. Mark it ready once required work
+and checks are complete under the root workflow. Review-only work reports readiness
 without changing draft status. Finish independent PRs even if another PR is blocked.
 
 Stop expanding the investigation once the requested behavior, substantive findings,
-available local checks and handoff preparation are complete. Pending CI and workers
-are reported follow-up work, not a reason to wait. Optional
+required checks and handoffs are resolved or have concrete blockers. Optional
 improvements and unrelated legacy limitations do not keep the PR workflow open.
 Report review-only work as reviewed with findings and validation limits; report
 writable work as ready, blocked or incomplete according to the observed evidence.

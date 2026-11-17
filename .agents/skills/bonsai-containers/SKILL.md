@@ -1,63 +1,52 @@
 ---
 name: bonsai-containers
-description: "Inspect, verify, restart or upgrade a Bonsai container installation using the lifecycle CLI. Initial setup and unsupported engines use deployment references. GitHub issues and approvals are separate."
+description: Inspect, stop, restart or upgrade a registered Bonsai installation through the runtime-owned managed lifecycle CLI. Use for authorized worker operations; verify installation and host compatibility first.
 ---
 
-Support the [root developer](../../../AGENTS.md) for requested installation work.
-Keep `references/` alongside `SKILL.md`. The source checkout is
-`constant-integration/`; the workspace `tools/containers.py` launcher delegates
-to its original CLI. Reading this skill does not start or install a worker.
+# Managed worker lifecycle
 
-# Bonsai container lifecycle
+Follow the [root contract](../../../AGENTS.md). Operations are implemented once in
+the trusted runtime checkout's `tools/containers.py`. Workspace paths are thin
+adapters; reading this skill does not authorize an operation.
 
-Use `python tools/containers.py --json --installation NAME ...` from Linux or
-WSL, with a private registry on the Linux filesystem. See
-[CLI operations](../../../constant-integration/docs/CONTAINER_LIFECYCLE.md) for registration,
-supported engines, outputs and recovery.
+Use Linux/WSL Python and a registered installation with a private Linux registry.
+The managed CLI supports native Docker Engine over a local Unix socket; unsupported
+hosts, remote engines, Podman and Compose-owned installations remain blocked.
+Read [runtime lifecycle guidance](https://github.com/xaime-vp/constant-integration/blob/main/docs/CONTAINER_LIFECYCLE.md)
+for registration, supported hosts, operation journals, backups and recovery.
 
-On Windows with Podman running inside WSL (`podman-machine-default`), use
-[scripts/podman_wsl.py](scripts/podman_wsl.py) from the workspace root:
+Run from the workspace, selecting the trusted source checkout if necessary:
 
 ```sh
-py -3 .agents/skills/bonsai-containers/scripts/podman_wsl.py inspect
-py -3 .agents/skills/bonsai-containers/scripts/podman_wsl.py issue-status 204 --container bonsai-worker
-py -3 .agents/skills/bonsai-containers/scripts/podman_wsl.py events --container bonsai-worker --tail 30 --filter 204
-py -3 .agents/skills/bonsai-containers/scripts/podman_wsl.py task-status bonsai-worker --issue 204
-py -3 .agents/skills/bonsai-containers/scripts/podman_wsl.py logs bonsai-worker --controller --tail 50
-py -3 .agents/skills/bonsai-containers/scripts/podman_wsl.py build --check
-py -3 .agents/skills/bonsai-containers/scripts/podman_wsl.py stop bonsai-worker --backup-suffix 20f8bf5
-py -3 .agents/skills/bonsai-containers/scripts/podman_wsl.py relaunch bonsai-worker
-py -3 .agents/skills/bonsai-containers/scripts/podman_wsl.py upgrade bonsai-worker --start
-py -3 .agents/skills/bonsai-containers/scripts/podman_wsl.py action bonsai-worker inspect-preparation KEY
+python tools/containers.py --platform-root /trusted/constant-integration --json --installation platform inspect
+python tools/containers.py --platform-root /trusted/constant-integration --json --installation platform stop
+python tools/containers.py --platform-root /trusted/constant-integration --json --installation platform restart
+python tools/containers.py --platform-root /trusted/constant-integration --json --installation platform upgrade --revision FULL_COMMIT
+python tools/containers.py --platform-root /trusted/constant-integration --json logs OPERATION_ID --tail 40
 ```
 
-- `podman_wsl.py` checks `/proc` for active `task_process`/`pi`/`check.py` work before stopping (`--force` overrides), backs up the previous container as `<container>-before-<suffix>`, preserves `/var/lib/bonsaiworker` volume mounts and `BONSAI_*` settings without exposing secrets, and refuses `prepare-issue` while the target worker is still running.
-- Use `upgrade` (not `relaunch`) whenever you want the volume's sealed release (`/var/lib/bonsaiworker/config.json` `app_root`/`release_root`) updated from the new image via `prepare` + `install`; `upgrade` leaves the container stopped unless `--start` is passed.
-- If the Pi session exposes `bonsai_build_image` / `bonsai_stop_worker` / `bonsai_worker_events` extension tools, they wrap the `podman-machine-default` build, `/proc`-checked stop/backup, and `podman_wsl.py events --container bonsai-worker --tail 10` flows.
+On Windows add `--wsl-distro NAME` and select the Windows path to the runtime
+checkout. Keep `--state-dir`, when supplied, a private Linux registry path.
+Global runtime options precede the subcommand.
 
-1. Identify **restart** (same image/release, no migration), **recreation** (new
-   container, preserved settings/volume), or **upgrade** (pinned source build,
-   checks, backup, install/migration and recreation).
-2. Run `inspect` for the selected installation; `verify` checks actual readiness.
-   Stop on ambiguity, drift, active/unknown work, competing listeners or
-   unconfirmed termination. The checkout branch is not the installed release.
-3. Run the authorized operation: `restart`, or `upgrade --revision COMMIT`.
-   Add `--start` only when startup is authorized: it can execute approved issues.
-   Upgrade otherwise leaves the installation stopped. Never silently upgrade a
-   restart request or migrate `docker run` to Compose.
-4. For failure/interruption, use `operation-status ID`, then
-   `logs ID --failed --tail 80`. Resume the **same** operation with
-   `upgrade --operation ID` (or `restart --operation ID`). Read
-   [exceptional deployment details](references/deployment.md) only for initial
-   setup, unsupported engines/layouts or unexpected drift.
-5. Report revision, checks, preservation outcomes, readiness and blockers
-   concisely. A listener/relay is not model generation or issue-to-PR delivery.
+- Inspect before an operation and confirm the bound target, installed revision,
+  configuration and active/unknown work. Inspection failure aborts mutation.
+- `stop` leaves the same container and release stopped; `restart` starts that same
+  release. Neither installs an upgrade. Both refuse active/unknown work; there is
+  no force bypass. Stop requires the source revision adding managed stop support.
+- `upgrade --revision FULL_COMMIT` builds/checks the pinned source, preserves
+  configuration and state through the runtime's journaled process, and leaves the
+  replacement stopped. Add `--start` only when listener startup is authorized.
+- Resume with the same action and `--operation ID`; recorded parameters govern
+  recovery. Never silently retry as a new operation or infer termination from a
+  stale record. Preserve private state, artifacts and recorded reservations.
+- The Pi tools retain `bonsai_worker_status`, `bonsai_stop_worker` and
+  `bonsai_worker_events` (now managed operation logs), and add explicit restart
+  and upgrade tools. All require explicit identities; mutation tools start inactive
+  and require interactive confirmation. Headless use follows the authorized CLI.
 
-Never change credentials, target binding, capabilities, checks or approval policy
-incidentally. Preserve consumed approvals, unknown tasks, releases, worktrees,
-checkpoints and evidence. Never clear state, declare stop from silence, start a
-second listener, auto-merge or promise automatic schema rollback.
-
-Keep issue editing, `/approve-agent`, handoff and PR repair outside deployment.
-Use the workspace `bonsai-ci` skill for a separately requested task handoff; never post
-approval for the owner. Loading this skill does not authorize startup or upgrade.
+Legacy `tools/docker_worker.py` and the skill script are path aliases for the same
+managed CLI. Legacy `relaunch`, standalone `build`, task-event options, container
+defaults and `--force` are retired; they are not silently translated into upgrades.
+Use the runtime's documented diagnostic/export tools for task events. A successful
+operation does not prove task delivery, current target CI or owner acceptance.

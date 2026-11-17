@@ -19,10 +19,12 @@ GitHub CI. A model review is not test execution.
 Start with focused checks that exercise changed behavior or reproduce a failure.
 Add integration or boundary cases where the diff crosses components; run the
 repository-required complete validation before declaring the combined change ready.
-Use existing assertions when adequate. In this workspace, workers author new tests,
-fixtures and test configuration through [delegation-triage](../delegation-triage/SKILL.md).
-Codex runs existing checks and leaves nonblocking handoffs; it does not author those
-changes or weaken tests for green CI.
+For constant-integration worker accounting or export changes, focused suites are
+`workers.bonsai.tests.test_token_accounting`, `test_intermediate_calls`,
+`test_export`, `test_incremental_export` and `test_listener`, followed by
+`python tools/check.py --component worker` and `python -m ruff check .`.
+Use existing assertions when adequate. Independent new tests follow ownership rules
+through [delegation-triage](../delegation-triage/SKILL.md); do not weaken tests for green CI.
 
 When host failures involve process semantics, signals, shells, paths or other
 platform behavior, inspect the failure and reproduce in the repository's supported
@@ -44,19 +46,17 @@ when relevant conditions change, a repository rule requires it or a diagnosed
 transient failure justifies another attempt; record why. Repeating a deterministic
 failure without a changed condition is not progress.
 
-After publication, refresh the PR head and inspect GitHub checks once at that exact
-SHA, including contributions already present. Do not wait for outstanding workers.
-A matching tree can support local evidence across
+After all authorized publications/contributions, refresh the PR head and inspect
+GitHub checks at that exact SHA. A matching tree can support local evidence across
 commits; older-head GitHub CI remains older-head CI. Pending, failed, skipped and
 unavailable checks remain visible. No configured checks is not a CI pass, and
 unknown mergeability is not confirmation that the PR is mergeable.
 
-Do not wait or poll for CI, worker delivery or automatic review. A CI repair request
-authorizes the repair and available verification, not an implicit CI watch. Only
-watch asynchronous work when the user explicitly requests it. Do not cancel or
-retrigger runs without task authorization. Report pending checks and distinguish
-readiness for review from merge readiness: required pending checks can block merge
-without keeping the Codex turn open. Follow repository rules for draft status.
+Follow explicitly requested CI watches and affected runs for a CI repair to a
+terminal result or concrete blocker. Use bounded waits/backoff, and inspect a
+stalled run's failure/prerequisite rather than continually requesting status. Do
+not cancel or retrigger runs without task authorization. Required pending checks
+keep readiness incomplete; accurately report unrelated pending checks.
 
 Return compact validation evidence with the reviewed/published SHA, check outcomes,
 environment limitations and remaining required work. The coordinator and
