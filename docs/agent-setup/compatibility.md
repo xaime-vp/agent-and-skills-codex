@@ -1,7 +1,7 @@
 # Update the workspace and verify compatibility
 
 Start by identifying which repository the request names. This developer harness
-is `xaime-vp/agent-and-skills-codex`; its default application target is
+is `xaime-vp/agent-and-skills`; its default application target is
 `xaime-vp/constant-integration`. The standalone synthetic evaluation harness is
 `xaime-vp/CI-testing-and-improvement`. Confirm the checkout's remote before
 pulling or creating a PR. Changes belong in the repository that owns the affected
@@ -54,12 +54,19 @@ read-only installation inspection. Select the container bound to the actual task
 repository; do not assume the default container serves every repository. Image
 revision alone does not establish the volume's sealed release.
 
-Current source uses `agent:test-specialist` and `agent:documentation`. A historical
+Current source (`main` 727f32c) uses `agent:coder`, `agent:test-specialist` and `agent:documentation`; coder and test-specialist get embedded read-only review, and fresh preparations also enable the four role-help bundles plus the read-only advisory `github-admin`/`planner`/`researcher` roles (operator-invoked, never admission routes). See the [capability map](platform-capabilities.md) for source feature gates, 1–10 slots, configured model behavior, executing-profile token accounting and read-only diagnostic/evidence APIs. A historical
 installation can still require `agent:generalist`, explicit token fields, or a
 legacy envelope without free-form preparation support. Verify those facts against
 its sealed parser/configuration before authoring executable work. Do not silently
 rewrite approvals or enable a new route. Unknown support stays unready; selecting
 a supported older route does not authorize an upgrade.
+
+For `bonsai_call_agent`, check the installed delegation policy, Pi/runtime
+release, exact-path schema-2 coder scope and finite budgets separately from
+`harness_roles`. The [consultation guide](repository-consultation.md) describes
+the no-shell route, schema-6 migration/kill switch, private artifact backup and
+unknown-call holds. Updated harness instructions require a reviewed bundle
+refresh and sealed release before installed workers receive them.
 
 For legacy schema validation, explicitly select the source revision under review:
 

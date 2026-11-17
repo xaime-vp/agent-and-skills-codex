@@ -1,7 +1,7 @@
 # Developer and worker handoff template
 
-Maintained in `xaime-vp/agent-and-skills-codex`. Use this with the
-[root developer contract](../../AGENTS.md) to summarize issue-driven test or
+Maintained in `xaime-vp/agent-and-skills`. Use this with the
+[root developer contract](../../AGENTS.md) to summarize independently delegated coder, test or
 documentation contributions and manual recovery handoffs. It describes evidence
 to gather; it does not grant the developer access to protected supervisor state
 or make a local model into a runtime supervisor.
@@ -12,7 +12,7 @@ roles do not send messages or files directly to peers. Link evidence rather than
 pasting transcripts or unexplained logs.
 
 - **Task / component:** issue, project directory or workspace, desired outcome.
-- **Supervisor / assigned role:** task key, current phase and next assignment.
+- **Supervisor / assigned role:** task key, current phase and next assignment; coder is an alternative implementation owner, not a second writer alongside the root developer.
 - **Scope / privileges:** readable context, exact writable files and prohibited actions.
 - **Instructions / checks:** applicable AGENTS.md paths and existing acceptance commands.
 - **Candidate identity:** platform revision, target branch/commit, source hash and PR.

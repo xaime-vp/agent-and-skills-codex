@@ -12,8 +12,9 @@ For review-only requests, report the proposed handoff without creating it.
 Identify the parent PR, exact head branch/revision, concrete acceptance gap and
 candidate editable paths. Read the repository's ownership rules: application repair,
 running existing tests and authoring independent tests/documentation can have
-different owners. Delegate meaningful independent work where required; record why
-no handoff is warranted when existing coverage/content already satisfies the change.
+different owners. The developer handles tightly coupled tests/docs by default.
+Delegate substantial independent work, specialist expertise or an explicit user
+assignment. No issue or justification is required just because file types differ.
 
 Inspect linked issues and PR discussion first, then search the selected repository
 for matching scope/branch. Check available worker status and delivered commits for
@@ -45,14 +46,7 @@ preparation and release-specific admission. Do not duplicate those mechanics her
 If approval is actually required by the selected installation, prepare the concrete
 request and report that requirement; never post owner commands on their behalf.
 
-In this workspace, Codex retains application-code ownership and workers retain test
-and product-documentation authorship. Handoffs are nonblocking. Inspect available
-status once, leave useful guidance and finish without waiting for admission,
-worker delivery or CI. If scope/checks are unverified or a branch reservation is
-active, record the exact prerequisite in a guidance-only issue without execution
-labels or an executable envelope; do not wait to dispatch it. Its later dispatcher
-must refresh the context and verify admission after the prerequisite clears.
-
-Review any delivered diff and commit already on the parent branch before accepting
-completion. Preserve concurrent commits, and re-triage when scope, ownership or
-delivery changes in a later task. Watch asynchronous work only when explicitly requested.
+During tracking, use bounded waits/backoff and prefer changes in worker state,
+comments or branch commits over repeated full inspections. Review the actual
+delivered diff and commit on the parent branch before accepting completion. Preserve
+concurrent commits, and re-triage only when scope, ownership or delivery changes.

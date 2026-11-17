@@ -1,10 +1,10 @@
 # Use workspace skills and call a Bonsai agent
 
-Use this guide from the `agent-and-skills-codex` developer workspace on `main`.
+Use this guide from the `agent-and-skills` developer workspace on `main`.
 The default external target is `xaime-vp/constant-integration`, checked out in
 `constant-integration/`; use another target only when the user selects it.
 Application issues and PRs belong to that selected repository. Changes to this
-instruction workspace use their own branch and PR in `agent-and-skills-codex`.
+instruction workspace use their own branch and PR in `agent-and-skills`.
 
 ## Choose and invoke a skill
 
@@ -16,9 +16,9 @@ authorize GitHub writes, installation changes, merging or deployment.
 
 | Skill | Use it for | Example request |
 | --- | --- | --- |
-| [pr-completion](../../.agents/skills/pr-completion/SKILL.md) | Finish under this harness delivery rules | `Use $pr-completion to finish PR <URL>.` |
 | [skill-maintenance](../../.agents/skills/skill-maintenance/SKILL.md) | Maintain this harness without changing its role | `Use $skill-maintenance to adapt this skill for the current client.` |
 | [pr-repair](../../.agents/skills/pr-repair/SKILL.md) | Coordinate existing-PR review, authorized implementation and repairs | `Use $pr-repair to review PR <URL> and implement scoped corrections.` |
+| [pr-completion](../../.agents/skills/pr-completion/SKILL.md) | Delegate PR completion to a subagent with connected GitHub tools and shell/Git access | `Use $pr-completion to finish PR <URL>.` |
 | [multi-pr-review](../../.agents/skills/multi-pr-review/SKILL.md) | Review several PRs in separate worktrees with evidence for each | `Use $multi-pr-review to review PRs <URL> and <URL> independently.` |
 | [implementation-completeness](../../.agents/skills/implementation-completeness/SKILL.md) | Compare promised behavior with implementation and assertions in every substantive review | `Use $implementation-completeness to compare PR <URL> with its acceptance criteria.` |
 | [bug-reproduction](../../.agents/skills/bug-reproduction/SKILL.md) | Reproduce a suspected defect with isolated state and targeted failure injection | `Use $bug-reproduction to verify this suspected startup failure in PR <URL>.` |
@@ -27,10 +27,13 @@ authorize GitHub writes, installation changes, merging or deployment.
 | [change-impact-analysis](../../.agents/skills/change-impact-analysis/SKILL.md) | Trace changed defaults, concurrency and contracts to consumers | `Use $change-impact-analysis to assess the changed runtime defaults in PR <URL>.` |
 | [delegation-triage](../../.agents/skills/delegation-triage/SKILL.md) | Check ownership and existing assignments before issuing specialist work | `Use $delegation-triage to identify documentation gaps not covered by the active workers for PR <URL>.` |
 | [pr-validation](../../.agents/skills/pr-validation/SKILL.md) | Select checks and assess evidence for the combined PR revision | `Use $pr-validation to verify PR <URL> against its final head and required checks.` |
-| [bonsai-ci](../../.agents/skills/bonsai-ci/SKILL.md) | Prepare and track test/documentation contributions to a parent PR | `Use $bonsai-ci to prepare regression coverage for PR <URL> in <owner/repo>.` |
+| [bonsai-ci](../../.agents/skills/bonsai-ci/SKILL.md) | Prepare a supervised coder task or test/documentation contribution to a parent PR | `Use $bonsai-ci to prepare regression coverage for PR <URL> in <owner/repo>.` |
 | [bonsai-containers](../../.agents/skills/bonsai-containers/SKILL.md) | Inspect or perform requested worker lifecycle operations | `Use $bonsai-containers to inspect the installation bound to <owner/repo> and report its sealed revision and enabled profiles.` |
 | [pr-submission](../../.agents/skills/pr-submission/SKILL.md) | Prepare/update the parent PR with validation and contribution evidence | `Use $pr-submission to update PR <URL> from its current diff and observed checks.` |
+| [github-batch-publish](../../.agents/skills/github-batch-publish/SKILL.md) | Publish multiple explicitly staged files to an existing PR through a compact Pi tool | `Use $github-batch-publish to plan the staged paths in PR <URL>; publish only once authorized.` |
 | [codex-cli-mcp](../../.agents/skills/codex-cli-mcp/SKILL.md) | Requested local Codex CLI work and existing approved GitHub MCP connections | `Use $codex-cli-mcp for <task> in <checkout>, using the already-connected GitHub tools.` |
+| [agent-file-inspection](../../.agents/skills/agent-file-inspection/SKILL.md) | Read the applicable agent/skill instruction files | `Use $agent-file-inspection to show agents/review/AGENTS.md and its scope.` |
+| [skill-tool-invocation](../../.agents/skills/skill-tool-invocation/SKILL.md) | Call an available tool explicitly referenced by another skill | `Use $skill-tool-invocation to run the read_agent_file tool named by $agent-file-inspection.` |
 
 Use connected GitHub tools directly when already available; skill invocation does
 not require starting another coding client. Installation/startup and worker
@@ -42,38 +45,48 @@ their conditions apply. A plain "review PR" stays read-only. "Review and impleme
 also requests scoped corrections under the ownership rules. Continue the existing
 PR/branch and select quick, standard or deep investigation based on the diff and
 risk; all modes retain required repository checks. See
-[existing-PR routing](../../AGENTS.md#skill-routing-for-existing-pull-requests).
+[existing-PR routing](developer-workflow.md#skill-routing-for-existing-pull-requests).
 
 When several PRs are named, also use `multi-pr-review` to isolate their checkouts
 and evidence. The review skills include four standard-library Python helpers;
-see [review tools](../../tools/README.md#review-evidence-tools) for their paths and
+see [review tools](https://github.com/xaime-vp/agent-and-skills/blob/a701dcf2de332cce285b49c0b7c609f2d75d4328/tools/README.md#review-evidence-tools) for their paths and
 CLI entrypoints. They do not publish reviews, repair PRs or start Bonsai workers.
 
 ## Select the worker role
 
-Codex implements application code and opens its parent draft PR before requesting
-contributions. Workers author tests, fixtures, test configuration and product
-documentation. Codex leaves useful issues and finishes without waiting for worker
-execution, CI or automatic reviews. Verify the selected repository's sealed
-installation supports the route before executable admission; source support does
-not establish deployment. Unverified/dependent handoffs may be left as guidance-only
-issues without execution labels or envelopes and with an exact next dispatcher action.
+In the **developer-led** path, the root developer implements application code and related tests/docs
+and opens its parent draft PR before specialist contributions. For an explicitly
+delegated autonomous coding task, the `agent:coder` supervisor is the alternative
+implementation owner and must not compete for the same branch/files. Verify the
+selected sealed installation supports the requested route; source support does
+not establish deployment. See [current capabilities](platform-capabilities.md).
 
 | Assignment / Role | Current source role / issue label | Delivery evidence & scope |
 | --- | --- | --- |
+| Scoped implementation | `agent:coder` | Approved application code and explicitly scoped related tests/docs; protected checks and embedded independent read-only review |
 | Regression coverage | `agent:test-specialist` | Exact tests/fixtures/test configuration, protected check outcomes, embedded read-only review |
 | Documentation | `agent:documentation` | Exact documentation changes and protected check outcomes; no embedded model reviewer |
-| Commit / candidate review | `reviewer` (no issue label; `workers/bonsai/reviewer.py`) | Read-only review distinguishing substantive blockers from optional suggestions without expanding approved scope; embedded for `test-specialist` or automatic PR commit `COMMENT` when `automatic_pr_reviews: true` |
+| Commit / candidate review | `reviewer` (no issue label; `workers/bonsai/reviewer.py`) | Read-only review distinguishing substantive blockers from optional suggestions without expanding approved scope; embedded for `coder` and `test-specialist` or automatic PR commit `COMMENT` when `automatic_pr_reviews: true` |
 | Coordinator | `supervisor` (no issue label; `workers/bonsai/supervisor.py`) | Deterministic authority, scope, freeze, termination, and honest evidence; initial front-end assignment/prompting only, no backend review role |
 | Admission control | `ready` / `blocked` labels | `ready` + no `blocked` + single matching `agent:*` label admits current revision (`admission_mode: ready`) |
 
 Generalist/tests are retired source routes, not aliases. Runtime roles are
 launched by the supervisor after admission, not by invoking a role name in chat
-or spawning a duplicate local subagent. The developer owns application repairs.
+or spawning a duplicate local subagent. The developer owns application repairs in the developer-led path; a separately authorized coder follows its supervisor-owned implementation and repair policy.
+
+An admitted, eligible coder can also receive native `bonsai_call_agent` under an
+explicit installed delegation policy. It asks a read-only repository researcher
+about a captured candidate and continues the same task; it has no implementation
+issue label. Follow [repository consultation](repository-consultation.md) for the
+call example and availability checks. It is separate from `/prepare-agent`,
+standalone advisory research and developer-client subagents. The helper bundle
+does not register it; an unavailable tool is not permission to launch a child.
 
 ## Request a contribution
 
-Replace the bracketed values and give the coding client this prompt:
+For a deliberately supervised **code** task, use [the coder assignment guide](../../agents/coding/AGENTS.md) and `$bonsai-ci`, select `agent:coder`, and choose **new PR or existing PR** explicitly through the executable envelope/operator. The root developer must not duplicate the implementation. Schema 4 is separate, trusted-opt-in and restricted to new drafts; source workflow components and model routing are not evidence of active installed dispatch.
+
+For a **developer-led test/documentation contribution**, replace the bracketed values and give the coding client this prompt:
 
 ```text
 Use $bonsai-ci to create or update a [test-specialist | documentation] handoff.
@@ -97,18 +110,16 @@ blocked until finalized/prepared; use operator --target-pr NUMBER.
 For a verified legacy schema-2/3 envelope, use numeric pull_request instead.
 On current source (admission_mode: ready), admit verified issues/proposals by
 removing blocked and adding ready (older releases require /approve-agent).
-Do not post owner preparation or approval commands for me. If prerequisites or
-branch reservations prevent dispatch, leave guidance-only issues without execution
-labels or an executable envelope and state the dependency and next dispatcher action.
-Return issue links, verified facts, gaps and exact next owner/operator action.
-Report already-delivered SHAs, actual check outcomes and observed final-head CI
-separately. Finish without waiting for preparation, admission, delivery or CI.
+Do not post owner preparation or approval commands for me. Return the issue link,
+verified facts, gaps and exact next owner/operator action. Track authorized
+delivery and report the delivered SHA, actual check outcomes and final-head
+GitHub CI separately.
 ```
 
 Test assertions should be independently authored; report application defects
 instead of widening scope. Documentation acceptance includes verifying paths,
 links, commands and supported behavior. Use the
-[assignment guides](../../AGENTS.md#workspace-layout-and-supporting-guidance)
+[assignment guides](../../AGENTS.md#repository-and-authority-boundaries)
 and [handoff template](handoff.md) for contribution-specific detail.
 
 ## Turn the request into executable work
@@ -123,30 +134,28 @@ and [handoff template](handoff.md) for contribution-specific detail.
 3. Inspect the sealed role, exact scope, protected checks, limits and pinned PR
    destination (`inspect-preparation KEY`), and resolve any gaps.
 4. For a complete verified legacy envelope, validate with the
-   [offline validator](../../tools/README.md).
+   [offline validator](https://github.com/xaime-vp/agent-and-skills/blob/a701dcf2de332cce285b49c0b7c609f2d75d4328/tools/README.md).
 5. On current source (`admission_mode: ready`), admit the verified proposal or
    legacy envelope by removing `blocked`, adding `ready`, and retaining the
    single matching `agent:*` label (no `/approve-agent` comment is needed;
    older installed releases still require `/approve-agent <full-digest>` or
    standalone `/approve-agent`). The already authorized listener admits work;
    loading a skill does not authorize starting or upgrading it.
-6. Serialize tests and documentation targeting one PR. Leave dependent work as
-   guidance for a later dispatcher; do not wait for reservations or dispatch a
-   second writer concurrently. That dispatcher verifies actual delivered commits
-   and reprepares stale proposals after head changes. Keep failed/unrun checks,
-   applicable model review and final-head CI distinct. Use `pr-submission` to report
-   available evidence and pending work, then finish. Merge remains an owner decision.
+6. Serialize tests and documentation targeting one PR. Verify actual delivered
+   commits and reprepare stale proposals after head changes. Keep failed/unrun
+   checks, applicable model review and final-head CI distinct. Use `pr-submission`
+   to reconcile the PR with that evidence. Merge remains an owner decision.
 
 ## Follow automatic PR review
 
 There is no issue implementation label or owner slash command for this reviewer.
 On a compatible installation, trusted `automatic_pr_reviews: true` enables polling
-of unseen commits on open PRs in its bound repository. It defaults off. Inspect
+of unseen commits on open PRs in its bound repository. Direct preparation defaults it off, while container deployment templates currently default it on; inspect
 existing configuration read-only; use `bonsai-containers` for separately authorized
 configuration/lifecycle changes. A contribution request does not enable reviews.
 
-With the opt-in already enabled, report any review already available for the actual
-PR commit. Do not wait for a review to appear. Fixes belong to the developer or a separately scoped
+With the opt-in already enabled, follow the review for the actual PR commit and
+report its advisory findings. Fixes belong to the developer or a separately scoped
 test/documentation assignment. Preserve review records, attempts and publication
 markers; do not reset them to retrigger a commit. See the
 [retry and evidence reference](../../.agents/skills/bonsai-ci/references/runtime-and-issue.md#automatic-commit-reviews-and-telemetry).
